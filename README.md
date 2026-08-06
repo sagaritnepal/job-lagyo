@@ -68,4 +68,5 @@ supabase/
 
 ## Deploying
 
-Deploy on [Vercel](https://vercel.com/new) and set the same environment variables from `.env.example` in your project settings.
+- **Vercel:** deploy on [Vercel](https://vercel.com/new) and set the same environment variables from `.env.example` in your project settings. No extra configuration needed.
+- **Hostinger:** see [DEPLOYMENT.md](DEPLOYMENT.md) for step-by-step instructions using Hostinger's Node.js App feature.

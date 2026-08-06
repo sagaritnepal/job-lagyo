@@ -75,6 +75,14 @@ export async function postJobAction(
   const salaryMin = formData.get("salary_min")?.toString();
   const salaryMax = formData.get("salary_max")?.toString();
   const deadline = formData.get("deadline")?.toString() || null;
+  const tags =
+    formData
+      .get("tags")
+      ?.toString()
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean) ?? [];
+  const featured = formData.get("featured") === "true";
 
   if (!title || !category || !jobType || !location || !description) {
     return { error: "Please fill in all required fields." };
@@ -93,6 +101,8 @@ export async function postJobAction(
       salary_max: salaryMax ? Number(salaryMax) : null,
       description,
       requirements,
+      tags,
+      featured,
       deadline,
       status: "published",
     })

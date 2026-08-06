@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { postJobAction, type PostJobState } from "./actions";
-import { JOB_CATEGORIES, JOB_TYPES, NEPAL_LOCATIONS } from "@/lib/constants";
+import { JOB_CATEGORY_NAMES, JOB_TYPES, NEPAL_LOCATIONS } from "@/lib/constants";
 
 const initialState: PostJobState = {};
 
@@ -62,7 +62,7 @@ export function PostJobForm({ hasCompany }: { hasCompany: boolean }) {
               <option value="" disabled>
                 Select category
               </option>
-              {JOB_CATEGORIES.map((c) => (
+              {JOB_CATEGORY_NAMES.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
@@ -117,9 +117,22 @@ export function PostJobForm({ hasCompany }: { hasCompany: boolean }) {
           <textarea name="description" rows={5} required className={inputClass} />
         </div>
         <div>
-          <label className={labelClass}>Requirements (optional)</label>
+          <label className={labelClass}>Requirements (optional, one per line)</label>
           <textarea name="requirements" rows={4} className={inputClass} />
         </div>
+        <div>
+          <label className={labelClass}>Skills / tags (comma separated, optional)</label>
+          <input
+            type="text"
+            name="tags"
+            placeholder="React, TypeScript, REST API"
+            className={inputClass}
+          />
+        </div>
+        <label className="flex items-center gap-2 text-sm text-neutral-700">
+          <input type="checkbox" name="featured" value="true" className="accent-primary-600" />
+          Feature this job at the top of listings
+        </label>
       </fieldset>
 
       {state.error && <p className="text-sm text-red-600">{state.error}</p>}

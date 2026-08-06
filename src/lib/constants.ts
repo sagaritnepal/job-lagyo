@@ -1,17 +1,27 @@
-export const JOB_CATEGORIES = [
-  "IT & Software",
-  "Banking & Finance",
-  "Hospitality & Tourism",
-  "Sales & Marketing",
-  "Education",
-  "Healthcare",
-  "NGO / INGO",
-  "Engineering & Construction",
-  "Accounting",
-  "Customer Service",
-  "Administration",
-  "Media & Communication",
-] as const;
+import {
+  Code2,
+  DollarSign,
+  MessageSquare,
+  Users,
+  Presentation,
+  Image as ImageIcon,
+  PenTool,
+  Heart,
+  type LucideIcon,
+} from "lucide-react";
+
+export const JOB_CATEGORIES: { name: string; icon: LucideIcon }[] = [
+  { name: "Information Technology", icon: Code2 },
+  { name: "Banking & Finance", icon: DollarSign },
+  { name: "Sales & Marketing", icon: MessageSquare },
+  { name: "Customer Service", icon: Users },
+  { name: "Education & Teaching", icon: Presentation },
+  { name: "Hospitality & Tourism", icon: ImageIcon },
+  { name: "Creative & Design", icon: PenTool },
+  { name: "Healthcare & Medicine", icon: Heart },
+];
+
+export const JOB_CATEGORY_NAMES = JOB_CATEGORIES.map((c) => c.name);
 
 export const NEPAL_LOCATIONS = [
   "Kathmandu",
@@ -31,3 +41,26 @@ export const JOB_TYPES: { value: string; label: string }[] = [
   { value: "contract", label: "Contract" },
   { value: "remote", label: "Remote" },
 ];
+
+export const APPLICATION_STATUSES: {
+  value: string;
+  label: string;
+  className: string;
+}[] = [
+  { value: "submitted", label: "Reviewing", className: "bg-amber-50 text-amber-700" },
+  { value: "reviewed", label: "Reviewing", className: "bg-amber-50 text-amber-700" },
+  { value: "shortlisted", label: "Shortlisted", className: "bg-green-50 text-green-700" },
+  { value: "interviewing", label: "Interviewing", className: "bg-primary-50 text-primary-700" },
+  { value: "rejected", label: "Rejected", className: "bg-red-50 text-red-700" },
+  { value: "hired", label: "Hired", className: "bg-accent-50 text-accent-700" },
+];
+
+export function statusMeta(status: string) {
+  return (
+    APPLICATION_STATUSES.find((s) => s.value === status) ?? {
+      value: status,
+      label: status,
+      className: "bg-neutral-100 text-neutral-600",
+    }
+  );
+}

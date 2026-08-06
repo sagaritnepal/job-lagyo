@@ -22,3 +22,8 @@ export function timeAgo(dateString: string) {
   const months = Math.floor(days / 30);
   return months === 1 ? "1 month ago" : `${months} months ago`;
 }
+
+export function daysLeft(deadline: string): number {
+  const diffMs = new Date(deadline).getTime() - Date.now();
+  return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+}

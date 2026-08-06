@@ -13,6 +13,7 @@ export type ApplicationStatus =
   | "submitted"
   | "reviewed"
   | "shortlisted"
+  | "interviewing"
   | "rejected"
   | "hired";
 
@@ -49,6 +50,8 @@ export interface Job {
   salary_period: "monthly" | "yearly";
   description: string;
   requirements: string | null;
+  tags: string[];
+  featured: boolean;
   deadline: string | null;
   status: JobStatus;
   created_at: string;
@@ -63,4 +66,7 @@ export interface Application {
   resume_url: string | null;
   status: ApplicationStatus;
   created_at: string;
+  updated_at: string;
+  job?: Job;
+  applicant?: Profile;
 }

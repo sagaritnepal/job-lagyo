@@ -40,9 +40,9 @@ export function ApplyForm({
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg bg-primary-600 px-6 py-3 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
+        className="w-full rounded-lg bg-primary-600 px-6 py-3.5 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
       >
-        {pending ? "Submitting..." : "Apply Now"}
+        {pending ? "Submitting..." : "Apply For Job"}
       </button>
     </form>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Briefcase } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/LogoutButton";
 
@@ -19,53 +20,64 @@ export async function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-1.5">
-          <span className="text-xl font-extrabold tracking-tight text-primary-700">
-            Job<span className="text-accent-600">Lagyo</span>
+    <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 text-white">
+            <Briefcase className="h-4.5 w-4.5" strokeWidth={2.25} />
+          </span>
+          <span className="text-lg font-extrabold tracking-tight text-primary-700">
+            Job Lagyo
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 sm:flex">
-          <Link
-            href="/jobs"
-            className="text-sm font-medium text-neutral-700 hover:text-primary-700"
-          >
-            Browse Jobs
+        <nav className="hidden items-center gap-7 md:flex">
+          <Link href="/jobs" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
+            Find Jobs
           </Link>
-          {role === "employer" && (
-            <Link
-              href="/dashboard"
-              className="text-sm font-medium text-neutral-700 hover:text-primary-700"
-            >
-              Dashboard
-            </Link>
-          )}
-          <Link
-            href="/post-job"
-            className="text-sm font-medium text-neutral-700 hover:text-primary-700"
-          >
-            Post a Job
+          <Link href="/companies" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
+            Companies
+          </Link>
+          <Link href="/coming-soon" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
+            Services
+          </Link>
+          <Link href="/coming-soon" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
+            Salaries
+          </Link>
+          <Link href="/coming-soon" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
+            Blogs
           </Link>
         </nav>
 
         <div className="flex items-center gap-4">
           {user ? (
-            <LogoutButton />
+            <>
+              {role === "employer" && (
+                <Link
+                  href="/dashboard"
+                  className="hidden text-sm font-medium text-neutral-600 hover:text-primary-700 sm:inline"
+                >
+                  Dashboard
+                </Link>
+              )}
+              <LogoutButton />
+              <Link
+                href="/post-job"
+                className="rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-700"
+              >
+                Post a Job
+              </Link>
+            </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="text-sm font-medium text-neutral-700 hover:text-primary-700"
-              >
-                Log in
+              <Link href="/login" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
+                Sign In
               </Link>
               <Link
-                href="/signup"
-                className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700"
+                href="/post-job"
+                className="rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-700"
               >
-                Sign up
+                Post a Job
               </Link>
             </>
           )}

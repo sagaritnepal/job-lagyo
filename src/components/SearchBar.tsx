@@ -1,14 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { NEPAL_LOCATIONS } from "@/lib/constants";
+import { Search } from "lucide-react";
+import { JOB_CATEGORY_NAMES, NEPAL_LOCATIONS } from "@/lib/constants";
 
 export function SearchBar({
   defaultQuery = "",
   defaultLocation = "",
+  defaultCategory = "",
 }: {
   defaultQuery?: string;
   defaultLocation?: string;
+  defaultCategory?: string;
 }) {
   const router = useRouter();
 
@@ -16,8 +19,10 @@ export function SearchBar({
     const params = new URLSearchParams();
     const q = formData.get("q")?.toString().trim();
     const location = formData.get("location")?.toString().trim();
+    const category = formData.get("category")?.toString().trim();
     if (q) params.set("q", q);
     if (location) params.set("location", location);
+    if (category) params.set("category", category);
     router.push(`/jobs${params.toString() ? `?${params.toString()}` : ""}`);
   }
 
@@ -26,22 +31,37 @@ export function SearchBar({
       action={handleSubmit}
       className="flex w-full flex-col gap-3 rounded-xl bg-white p-3 shadow-lg sm:flex-row sm:items-center"
     >
-      <input
-        type="text"
-        name="q"
-        defaultValue={defaultQuery}
-        placeholder="Job title, e.g. Accountant, Frontend Developer"
-        className="flex-1 rounded-lg border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-primary-500"
-      />
+      <div className="flex flex-1 items-center gap-2 rounded-lg border border-neutral-200 px-3 focus-within:border-primary-500">
+        <Search className="h-4 w-4 shrink-0 text-neutral-400" />
+        <input
+          type="text"
+          name="q"
+          defaultValue={defaultQuery}
+          placeholder="Job title, keywords or skills"
+          className="w-full py-3 text-sm text-neutral-900 outline-none"
+        />
+      </div>
       <select
         name="location"
         defaultValue={defaultLocation}
-        className="rounded-lg border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-primary-500 sm:w-48"
+        className="rounded-lg border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-primary-500 sm:w-44"
       >
-        <option value="">All locations</option>
+        <option value="">Kathmandu, Nepal</option>
         {NEPAL_LOCATIONS.map((loc) => (
           <option key={loc} value={loc}>
             {loc}
+          </option>
+        ))}
+      </select>
+      <select
+        name="category"
+        defaultValue={defaultCategory}
+        className="rounded-lg border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-primary-500 sm:w-44"
+      >
+        <option value="">All Categories</option>
+        {JOB_CATEGORY_NAMES.map((c) => (
+          <option key={c} value={c}>
+            {c}
           </option>
         ))}
       </select>

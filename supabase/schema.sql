@@ -85,6 +85,8 @@ create table if not exists jobs (
   salary_period text not null default 'monthly' check (salary_period in ('monthly', 'yearly')),
   description text not null,
   requirements text,
+  tags text[] not null default '{}',
+  featured boolean not null default false,
   deadline date,
   status text not null default 'published' check (status in ('draft', 'published', 'closed')),
   created_at timestamptz not null default now()
@@ -127,11 +129,25 @@ create table if not exists applications (
   cover_letter text,
   resume_url text,
   status text not null default 'submitted' check (
-    status in ('submitted', 'reviewed', 'shortlisted', 'rejected', 'hired')
+    status in ('submitted', 'reviewed', 'shortlisted', 'interviewing', 'rejected', 'hired')
   ),
   created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
   unique (job_id, applicant_id)
 );
+
+create or replace function set_updated_at()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists applications_set_updated_at on applications;
+create trigger applications_set_updated_at
+  before update on applications
+  for each row execute procedure set_updated_at();
 
 alter table applications enable row level security;
 

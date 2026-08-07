@@ -54,7 +54,7 @@ export default function SignupPage() {
                 value="employer"
                 className="accent-primary-600"
               />
-              Employer
+              Job Provider
             </label>
           </div>
         </div>

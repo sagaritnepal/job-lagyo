@@ -6,6 +6,8 @@ export interface EmployerJobRow {
   title: string;
   slug: string;
   status: string;
+  rejection_reason: string | null;
+  flag_reason: string | null;
   created_at: string;
   applicant_count: number;
 }
@@ -15,6 +17,8 @@ interface RawEmployerJobRow {
   title: string;
   slug: string;
   status: string;
+  rejection_reason: string | null;
+  flag_reason: string | null;
   created_at: string;
   applications: { count: number }[] | null;
 }
@@ -45,7 +49,7 @@ export async function getEmployerJobs(ownerId: string): Promise<EmployerJobRow[]
 
   const { data: jobs, error } = await supabase
     .from("jobs")
-    .select("id, title, slug, status, created_at, applications(count)")
+    .select("id, title, slug, status, rejection_reason, flag_reason, created_at, applications(count)")
     .in("company_id", companyIds)
     .order("created_at", { ascending: false });
 
@@ -59,6 +63,8 @@ export async function getEmployerJobs(ownerId: string): Promise<EmployerJobRow[]
     title: job.title,
     slug: job.slug,
     status: job.status,
+    rejection_reason: job.rejection_reason,
+    flag_reason: job.flag_reason,
     created_at: job.created_at,
     applicant_count: job.applications?.[0]?.count ?? 0,
   }));

@@ -64,3 +64,26 @@ export function statusMeta(status: string) {
     }
   );
 }
+
+export const JOB_STATUSES: {
+  value: string;
+  label: string;
+  className: string;
+}[] = [
+  { value: "pending", label: "Pending review", className: "bg-amber-50 text-amber-700" },
+  { value: "published", label: "Published", className: "bg-green-50 text-green-700" },
+  { value: "rejected", label: "Rejected", className: "bg-red-50 text-red-700" },
+  { value: "flagged", label: "Flagged (fraud)", className: "bg-red-100 text-red-800" },
+  { value: "closed", label: "Closed", className: "bg-neutral-100 text-neutral-600" },
+  { value: "draft", label: "Draft", className: "bg-neutral-100 text-neutral-600" },
+];
+
+export function jobStatusMeta(status: string) {
+  return (
+    JOB_STATUSES.find((s) => s.value === status) ?? {
+      value: status,
+      label: status,
+      className: "bg-neutral-100 text-neutral-600",
+    }
+  );
+}

@@ -79,6 +79,14 @@ async function NavbarAuthSection() {
               Dashboard
             </Link>
           )}
+          {role === "admin" && (
+            <Link
+              href="/admin"
+              className="hidden text-sm font-medium text-neutral-600 hover:text-primary-700 sm:inline"
+            >
+              Admin
+            </Link>
+          )}
           <LogoutButton />
           <Link
             href="/post-job"

@@ -11,6 +11,7 @@ export default async function CompaniesPage() {
   const { data: companies } = await supabase
     .from("companies")
     .select("*")
+    .eq("is_blacklisted", false)
     .order("created_at", { ascending: false });
 
   return (

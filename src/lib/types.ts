@@ -1,4 +1,4 @@
-export type UserRole = "candidate" | "employer";
+export type UserRole = "candidate" | "employer" | "admin";
 
 export type JobType =
   | "full-time"
@@ -7,7 +7,13 @@ export type JobType =
   | "contract"
   | "remote";
 
-export type JobStatus = "draft" | "published" | "closed";
+export type JobStatus =
+  | "draft"
+  | "pending"
+  | "published"
+  | "rejected"
+  | "flagged"
+  | "closed";
 
 export type ApplicationStatus =
   | "submitted"
@@ -34,6 +40,9 @@ export interface Company {
   website: string | null;
   description: string | null;
   location: string;
+  is_blacklisted: boolean;
+  blacklist_reason: string | null;
+  blacklisted_at: string | null;
   created_at: string;
 }
 
@@ -54,6 +63,9 @@ export interface Job {
   featured: boolean;
   deadline: string | null;
   status: JobStatus;
+  rejection_reason: string | null;
+  flag_reason: string | null;
+  reviewed_at: string | null;
   created_at: string;
   company?: Company;
 }

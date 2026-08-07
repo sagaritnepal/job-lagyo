@@ -33,9 +33,16 @@ export async function postJobAction(
 
   let { data: company } = await supabase
     .from("companies")
-    .select("id")
+    .select("id, is_blacklisted")
     .eq("owner_id", user.id)
     .maybeSingle();
+
+  if (company?.is_blacklisted) {
+    return {
+      error:
+        "Your company has been blacklisted from posting jobs on Job Lagyo. Contact support if you believe this is a mistake.",
+    };
+  }
 
   if (!company) {
     const companyName = formData.get("company_name")?.toString().trim();
@@ -62,7 +69,11 @@ export async function postJobAction(
         error: "Could not create your company profile. Please try again.",
       };
     }
-    company = newCompany;
+    company = { id: newCompany.id, is_blacklisted: false };
+  }
+
+  if (!company) {
+    return { error: "Could not find your company profile. Please try again." };
   }
 
   const title = formData.get("title")?.toString().trim();
@@ -104,7 +115,7 @@ export async function postJobAction(
       tags,
       featured,
       deadline,
-      status: "published",
+      status: "pending",
     })
     .select("slug")
     .single();
@@ -113,5 +124,5 @@ export async function postJobAction(
     return { error: "Could not post job. Please try again." };
   }
 
-  redirect(`/jobs/${job.slug}`);
+  redirect(`/dashboard/jobs?posted=${job.slug}`);
 }

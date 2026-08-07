@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Calendar } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { getEmployerApplications } from "@/lib/data/dashboard";
 import { statusMeta } from "@/lib/constants";
 import { CompanyBadge } from "@/components/CompanyBadge";
@@ -26,10 +26,7 @@ export default async function ApplicationsPage({
   const status = typeof params.status === "string" ? params.status : "";
   const jobId = typeof params.job === "string" ? params.job : "";
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return null;
 
   let applications = await getEmployerApplications(user.id, status || undefined);

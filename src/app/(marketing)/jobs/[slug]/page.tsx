@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Briefcase, Clock, MapPin, Wallet } from "lucide-react";
 import { getJobBySlug } from "@/lib/data/jobs";
 import { daysLeft, formatSalary, timeAgo } from "@/lib/format";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { CompanyBadge } from "@/components/CompanyBadge";
 import { ApplyForm } from "./ApplyForm";
 
@@ -19,14 +19,9 @@ export default async function JobDetailPage({
   params,
 }: PageProps<"/jobs/[slug]">) {
   const { slug } = await params;
-  const job = await getJobBySlug(slug);
+  const [job, user] = await Promise.all([getJobBySlug(slug), getAuthUser()]);
 
   if (!job) notFound();
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   const remaining = job.deadline ? daysLeft(job.deadline) : null;
   const requirementLines =

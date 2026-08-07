@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Briefcase, Calendar, CheckCircle2, HelpCircle, Plus, UserCheck, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import {
   getApplicationFlowTrend,
   getEmployerStats,
@@ -16,19 +17,13 @@ export const metadata = {
 };
 
 export default async function DashboardOverviewPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return null;
 
-  const { data: company } = await supabase
-    .from("companies")
-    .select("name")
-    .eq("owner_id", user.id)
-    .maybeSingle();
+  const supabase = await createClient();
 
-  const [stats, recentApplications, trend] = await Promise.all([
+  const [{ data: company }, stats, recentApplications, trend] = await Promise.all([
+    supabase.from("companies").select("name").eq("owner_id", user.id).maybeSingle(),
     getEmployerStats(user.id),
     getRecentApplications(user.id, 5),
     getApplicationFlowTrend(user.id),

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { getEmployerApplications, getEmployerJobs } from "@/lib/data/dashboard";
 import { statusMeta } from "@/lib/constants";
 
@@ -22,10 +22,7 @@ function BreakdownBar({ label, count, max, className }: { label: string; count: 
 }
 
 export default async function AnalyticsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return null;
 
   const [applications, jobs] = await Promise.all([

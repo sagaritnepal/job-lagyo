@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { PostJobForm } from "./PostJobForm";
 
 export const metadata = {
@@ -7,10 +8,7 @@ export const metadata = {
 };
 
 export default async function PostJobPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
 
   if (!user) {
     return (
@@ -32,6 +30,7 @@ export default async function PostJobPage() {
     );
   }
 
+  const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")

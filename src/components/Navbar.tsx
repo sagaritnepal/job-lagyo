@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { LogoutButton } from "@/components/LogoutButton";
 
 export function Navbar() {
@@ -52,13 +53,11 @@ function NavbarAuthFallback() {
 }
 
 async function NavbarAuthSection() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
 
   let role: string | null = null;
   if (user) {
+    const supabase = await createClient();
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")

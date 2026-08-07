@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { LogoutButton } from "@/components/LogoutButton";
 
 export const metadata = {
@@ -6,11 +7,10 @@ export const metadata = {
 };
 
 export default async function SettingsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return null;
+
+  const supabase = await createClient();
 
   const [{ data: profile }, { data: company }] = await Promise.all([
     supabase.from("profiles").select("full_name, phone, role").eq("id", user.id).maybeSingle(),

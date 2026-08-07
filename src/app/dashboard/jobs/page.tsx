@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { getEmployerJobs } from "@/lib/data/dashboard";
 import { timeAgo } from "@/lib/format";
 import { jobStatusMeta } from "@/lib/constants";
@@ -15,10 +15,7 @@ export default async function JobPostsPage({
   const params = await searchParams;
   const posted = typeof params.posted === "string" ? params.posted : "";
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return null;
 
   const jobs = await getEmployerJobs(user.id);

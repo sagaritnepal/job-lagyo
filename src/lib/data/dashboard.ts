@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { Application } from "@/lib/types";
 
@@ -23,16 +24,19 @@ interface RawEmployerJobRow {
   applications: { count: number }[] | null;
 }
 
-async function getOwnerCompanyIds(ownerId: string): Promise<string[]> {
+// Every stat/list helper below needs these same two id lookups. cache()
+// memoizes them per request so N helpers running in Promise.all collapse
+// into one companies query + one jobs query instead of N of each.
+const getOwnerCompanyIds = cache(async (ownerId: string): Promise<string[]> => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("companies")
     .select("id")
     .eq("owner_id", ownerId);
   return data?.map((c) => c.id) ?? [];
-}
+});
 
-async function getOwnerJobIds(companyIds: string[]): Promise<string[]> {
+const getOwnerJobIds = cache(async (companyIds: string[]): Promise<string[]> => {
   if (companyIds.length === 0) return [];
   const supabase = await createClient();
   const { data } = await supabase
@@ -40,7 +44,7 @@ async function getOwnerJobIds(companyIds: string[]): Promise<string[]> {
     .select("id")
     .in("company_id", companyIds);
   return data?.map((j) => j.id) ?? [];
-}
+});
 
 export async function getEmployerJobs(ownerId: string): Promise<EmployerJobRow[]> {
   const supabase = await createClient();

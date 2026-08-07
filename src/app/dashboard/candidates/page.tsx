@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { getEmployerApplications } from "@/lib/data/dashboard";
 import { CompanyBadge } from "@/components/CompanyBadge";
 import { statusMeta } from "@/lib/constants";
@@ -8,10 +8,7 @@ export const metadata = {
 };
 
 export default async function CandidatesPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return null;
 
   const applications = await getEmployerApplications(user.id);

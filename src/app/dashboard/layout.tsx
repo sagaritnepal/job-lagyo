@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
+import { MobileNavProvider } from "@/components/dashboard/MobileNavContext";
 
 export default async function DashboardLayout({
   children,
@@ -24,12 +25,14 @@ export default async function DashboardLayout({
   if (profile?.role !== "employer") redirect("/");
 
   return (
-    <div className="flex min-h-full bg-neutral-50">
-      <DashboardSidebar name={profile.full_name ?? "Employer"} email={user.email ?? ""} />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <DashboardTopBar />
-        <main className="flex-1 p-6">{children}</main>
+    <MobileNavProvider>
+      <div className="flex min-h-full bg-neutral-50">
+        <DashboardSidebar name={profile.full_name ?? "Employer"} email={user.email ?? ""} />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <DashboardTopBar />
+          <main className="flex-1 p-4 sm:p-6">{children}</main>
+        </div>
       </div>
-    </div>
+    </MobileNavProvider>
   );
 }

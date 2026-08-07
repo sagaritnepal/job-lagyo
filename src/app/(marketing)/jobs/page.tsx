@@ -60,7 +60,7 @@ export default async function JobsPage({
       </div>
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[220px_1fr]">
-        <aside className="space-y-6">
+        <aside className="order-2 space-y-6 lg:order-1">
           <div>
             <h2 className="text-sm font-semibold text-neutral-800">
               Category
@@ -164,7 +164,7 @@ export default async function JobsPage({
           </div>
         </aside>
 
-        <div>
+        <div className="order-1 lg:order-2">
           {jobs.length === 0 ? (
             <p className="rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-10 text-center text-sm text-neutral-500">
               No jobs match your filters right now. Try broadening your

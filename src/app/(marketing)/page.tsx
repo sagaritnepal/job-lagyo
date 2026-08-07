@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, MapPin, Search, UserPlus, MousePointerClick, PartyPopper } from "lucide-react";
 import { SearchBar } from "@/components/SearchBar";
 import { JobListItem } from "@/components/JobListItem";
@@ -39,7 +40,15 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-neutral-900 via-neutral-900 to-primary-950 px-4 pb-32 pt-16 sm:px-6 sm:pb-40 sm:pt-20">
+      <section className="relative overflow-hidden bg-neutral-900 px-4 pb-32 pt-16 sm:px-6 sm:pb-40 sm:pt-20">
+        <Image
+          src="/Bouddhanath-Stupa-amazing-vieww-1536x1152.jpg"
+          alt="Boudhanath Stupa, Kathmandu"
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/85 via-neutral-900/75 to-primary-950/90" />
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white">
             #1 Job Portal in Nepal
@@ -102,20 +111,22 @@ export default async function HomePage() {
             Discover opportunities across high-demand sectors in Nepal&apos;s job market.
           </p>
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {JOB_CATEGORIES.map(({ name, icon: Icon }) => (
             <Link
               key={name}
               href={`/jobs?category=${encodeURIComponent(name)}`}
-              className="rounded-xl border border-neutral-200 bg-white p-5 text-center transition hover:border-primary-300 hover:shadow-sm"
+              className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-3.5 transition hover:border-primary-300 hover:shadow-sm"
             >
-              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
-                <Icon className="h-5 w-5" />
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+                <Icon className="h-4.5 w-4.5" />
               </span>
-              <p className="mt-3 text-sm font-semibold text-neutral-800">{name}</p>
-              <p className="text-xs text-neutral-400">
-                {(categoryCounts[name] ?? 0).toLocaleString()} Active Jobs
-              </p>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold leading-tight text-neutral-800">{name}</span>
+                <span className="block text-xs text-neutral-400">
+                  {(categoryCounts[name] ?? 0).toLocaleString()} Active Jobs
+                </span>
+              </span>
             </Link>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -6,9 +7,13 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row">
           <div>
-            <span className="text-lg font-extrabold tracking-tight text-primary-700">
-              Job<span className="text-accent-600">Lagyo</span>
-            </span>
+            <Image
+              src="/job-lagyo-logo.png"
+              alt="Job Lagyo"
+              width={1140}
+              height={270}
+              className="h-7 w-auto"
+            />
             <p className="mt-2 max-w-xs text-sm text-neutral-500">
               Nepal&apos;s job portal — connecting job seekers in Kathmandu
               and beyond with employers who are hiring now.

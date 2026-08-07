@@ -1,40 +1,27 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Briefcase } from "lucide-react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { LogoutButton } from "@/components/LogoutButton";
+import { NavLinks } from "@/components/NavLinks";
 
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 text-white">
-            <Briefcase className="h-4.5 w-4.5" strokeWidth={2.25} />
-          </span>
-          <span className="text-lg font-extrabold tracking-tight text-primary-700">
-            Job Lagyo
-          </span>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/job-lagyo-logo.png"
+            alt="Job Lagyo"
+            width={1140}
+            height={270}
+            priority
+            className="h-8 w-auto sm:h-9"
+          />
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
-          <Link href="/jobs" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
-            Find Jobs
-          </Link>
-          <Link href="/companies" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
-            Companies
-          </Link>
-          <Link href="/coming-soon" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
-            Services
-          </Link>
-          <Link href="/coming-soon" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
-            Salaries
-          </Link>
-          <Link href="/coming-soon" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
-            Blogs
-          </Link>
-        </nav>
+        <NavLinks />
 
         <Suspense fallback={<NavbarAuthFallback />}>
           <NavbarAuthSection />
@@ -67,7 +54,7 @@ async function NavbarAuthSection() {
   }
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2 sm:gap-4">
       {user ? (
         <>
           {role === "employer" && (
@@ -89,19 +76,22 @@ async function NavbarAuthSection() {
           <LogoutButton />
           <Link
             href="/post-job"
-            className="rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-700"
+            className="rounded-lg bg-accent-600 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-accent-700 sm:px-4 sm:text-sm"
           >
             Post a Job
           </Link>
         </>
       ) : (
         <>
-          <Link href="/login" className="text-sm font-medium text-neutral-600 hover:text-primary-700">
+          <Link
+            href="/login"
+            className="rounded-lg bg-green-600 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-green-700 sm:px-4 sm:text-sm"
+          >
             Sign In
           </Link>
           <Link
             href="/post-job"
-            className="rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-700"
+            className="rounded-lg bg-accent-600 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-accent-700 sm:px-4 sm:text-sm"
           >
             Post a Job
           </Link>

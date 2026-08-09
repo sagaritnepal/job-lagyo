@@ -1,10 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { PostJobForm } from "./PostJobForm";
 
-export const metadata = {
-  title: "Post a Job — Job Lagyo",
+export const metadata: Metadata = {
+  title: "Post a Job",
+  description:
+    "Post a job vacancy for free and reach thousands of job seekers across Kathmandu and Nepal. Hire top local talent on Job Lagyo.",
+  alternates: { canonical: "/post-job" },
 };
 
 export default async function PostJobPage() {

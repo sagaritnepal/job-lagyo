@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SlidersHorizontal, X } from "lucide-react";
 import { JobListItem } from "@/components/JobListItem";
@@ -5,8 +6,11 @@ import { SearchBar } from "@/components/SearchBar";
 import { getPublishedJobs } from "@/lib/data/jobs";
 import { JOB_CATEGORY_NAMES, JOB_TYPES, NEPAL_LOCATIONS } from "@/lib/constants";
 
-export const metadata = {
-  title: "Browse Jobs — Job Lagyo",
+export const metadata: Metadata = {
+  title: "Browse Jobs",
+  description:
+    "Search thousands of verified job vacancies across Kathmandu, Pokhara, and all of Nepal. Filter by category, location, and job type on Job Lagyo.",
+  alternates: { canonical: "/jobs" },
 };
 
 export default async function JobsPage({

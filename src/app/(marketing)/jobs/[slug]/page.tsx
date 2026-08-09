@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { Briefcase, Clock, MapPin, Wallet } from "lucide-react";
 import { getJobBySlug } from "@/lib/data/jobs";
 import { daysLeft, formatSalary, timeAgo } from "@/lib/format";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { CompanyBadge } from "@/components/CompanyBadge";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { ApplyForm } from "./ApplyForm";
 
 const JOB_TYPE_LABEL: Record<string, string> = {
@@ -14,6 +16,55 @@ const JOB_TYPE_LABEL: Record<string, string> = {
   contract: "Contract",
   remote: "Remote",
 };
+
+const EMPLOYMENT_TYPE_SCHEMA: Record<string, string> = {
+  "full-time": "FULL_TIME",
+  "part-time": "PART_TIME",
+  internship: "INTERN",
+  contract: "CONTRACTOR",
+  remote: "FULL_TIME",
+};
+
+function isJobLive(job: { status: string; deadline: string | null }) {
+  if (job.status !== "published") return false;
+  if (job.deadline && new Date(job.deadline) < new Date()) return false;
+  return true;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/jobs/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const job = await getJobBySlug(slug);
+
+  if (!job) {
+    return { title: "Job not found", robots: { index: false, follow: false } };
+  }
+
+  const companyName = job.company?.name ?? "Confidential Company";
+  const title = `${job.title} at ${companyName}`;
+  const description = `${job.title} at ${companyName} in ${job.location}. ${formatSalary(job)}. ${JOB_TYPE_LABEL[job.job_type] ?? job.job_type} role — apply now on ${SITE_NAME}.`;
+  const live = isJobLive(job);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/jobs/${job.slug}` },
+    robots: live
+      ? { index: true, follow: true }
+      : { index: false, follow: false },
+    openGraph: {
+      type: "website",
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
 
 export default async function JobDetailPage({
   params,
@@ -27,8 +78,91 @@ export default async function JobDetailPage({
   const requirementLines =
     job.requirements?.split("\n").map((l) => l.trim()).filter(Boolean) ?? [];
 
+  const companyName = job.company?.name ?? "Confidential Company";
+  const isRemote = job.job_type === "remote" || job.location === "Remote";
+
+  const jobPostingJsonLd = isJobLive(job)
+    ? {
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        title: job.title,
+        description: job.description,
+        identifier: {
+          "@type": "PropertyValue",
+          name: SITE_NAME,
+          value: job.id,
+        },
+        datePosted: job.created_at,
+        ...(job.deadline ? { validThrough: job.deadline } : {}),
+        employmentType: EMPLOYMENT_TYPE_SCHEMA[job.job_type] ?? "OTHER",
+        hiringOrganization: {
+          "@type": "Organization",
+          name: companyName,
+          ...(job.company?.website ? { sameAs: job.company.website } : {}),
+          ...(job.company?.logo_url ? { logo: job.company.logo_url } : {}),
+        },
+        ...(isRemote
+          ? {
+              jobLocationType: "TELECOMMUTE",
+              applicantLocationRequirements: {
+                "@type": "Country",
+                name: "Nepal",
+              },
+            }
+          : {
+              jobLocation: {
+                "@type": "Place",
+                address: {
+                  "@type": "PostalAddress",
+                  addressLocality: job.location,
+                  addressCountry: "NP",
+                },
+              },
+            }),
+        ...(job.salary_min || job.salary_max
+          ? {
+              baseSalary: {
+                "@type": "MonetaryAmount",
+                currency: "NPR",
+                value: {
+                  "@type": "QuantitativeValue",
+                  ...(job.salary_min ? { minValue: job.salary_min } : {}),
+                  ...(job.salary_max ? { maxValue: job.salary_max } : {}),
+                  unitText: job.salary_period === "yearly" ? "YEAR" : "MONTH",
+                },
+              },
+            }
+          : {}),
+      }
+    : null;
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Jobs", item: `${SITE_URL}/jobs` },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: job.title,
+        item: `${SITE_URL}/jobs/${job.slug}`,
+      },
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+      {jobPostingJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Link href="/jobs" className="text-sm text-primary-700 hover:underline">
         ← Back to all jobs
       </Link>
@@ -39,7 +173,7 @@ export default async function JobDetailPage({
           <div>
             <h1 className="text-2xl font-bold text-neutral-900">{job.title}</h1>
             <p className="mt-1 text-sm font-medium text-primary-700">
-              {job.company?.name ?? "Confidential Company"}
+              {companyName}
             </p>
           </div>
         </div>

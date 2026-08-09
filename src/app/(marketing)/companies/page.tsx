@@ -1,9 +1,13 @@
+import type { Metadata } from "next";
 import { Building2, Globe, MapPin } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { CompanyBadge } from "@/components/CompanyBadge";
 
-export const metadata = {
-  title: "Companies — Job Lagyo",
+export const metadata: Metadata = {
+  title: "Companies Hiring in Nepal",
+  description:
+    "Browse verified employers actively hiring in Kathmandu and across Nepal. Discover top companies and their open job vacancies on Job Lagyo.",
+  alternates: { canonical: "/companies" },
 };
 
 export default async function CompaniesPage() {

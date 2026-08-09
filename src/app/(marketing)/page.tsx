@@ -48,7 +48,7 @@ export default async function HomePage() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/85 via-neutral-900/75 to-primary-950/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/90 via-neutral-900/85 to-primary-950/95" />
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white">
             #1 Job Portal in Nepal
@@ -66,17 +66,19 @@ export default async function HomePage() {
             <SearchBar />
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-neutral-300">
-            <span>Popular Searches:</span>
-            {["React Developer", "Digital Marketing", "Sales Manager", "Teacher"].map((term) => (
-              <Link
-                key={term}
-                href={`/jobs?q=${encodeURIComponent(term)}`}
-                className="rounded-full border border-white/20 px-3 py-1 hover:bg-white/10"
-              >
-                {term}
-              </Link>
-            ))}
+          <div className="mt-6 text-xs text-white/80 sm:mt-5">
+            <span className="block font-medium sm:inline">Popular Searches:</span>
+            <div className="mt-2 flex flex-wrap items-center justify-center gap-2 sm:mt-0 sm:inline-flex">
+              {["React Developer", "Digital Marketing", "Sales Manager", "Teacher"].map((term) => (
+                <Link
+                  key={term}
+                  href={`/jobs?q=${encodeURIComponent(term)}`}
+                  className="rounded-full border border-white/25 bg-black/30 px-3 py-1 text-white backdrop-blur-sm hover:bg-white/20"
+                >
+                  {term}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
         <KathmanduSkyline />

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { Logo } from "@/components/Logo";
 
 export function Footer() {
   return (
@@ -7,13 +7,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row">
           <div>
-            <Image
-              src="/job-lagyo-logo.png"
-              alt="Job Lagyo"
-              width={1140}
-              height={270}
-              className="h-7 w-auto"
-            />
+            <Logo className="text-2xl" />
             <p className="mt-2 max-w-xs text-sm text-neutral-500">
               Nepal&apos;s job portal — connecting job seekers in Kathmandu
               and beyond with employers who are hiring now.

@@ -1,24 +1,17 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { LogoutButton } from "@/components/LogoutButton";
 import { NavLinks } from "@/components/NavLinks";
+import { Logo } from "@/components/Logo";
 
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center">
-          <Image
-            src="/job-lagyo-logo.png"
-            alt="Job Lagyo"
-            width={1140}
-            height={270}
-            priority
-            className="h-8 w-auto sm:h-9"
-          />
+          <Logo className="text-3xl sm:text-[2rem]" />
         </Link>
 
         <NavLinks />

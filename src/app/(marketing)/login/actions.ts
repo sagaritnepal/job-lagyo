@@ -5,7 +5,12 @@ import { createClient } from "@/lib/supabase/server";
 
 export type AuthState = { error?: string };
 
+function isSafeNext(next: string): boolean {
+  return next.startsWith("/") && !next.startsWith("//");
+}
+
 export async function loginAction(
+  next: string,
   _prevState: AuthState,
   formData: FormData,
 ): Promise<AuthState> {
@@ -22,5 +27,5 @@ export async function loginAction(
     return { error: error.message };
   }
 
-  redirect("/");
+  redirect(isSafeNext(next) ? next : "/");
 }

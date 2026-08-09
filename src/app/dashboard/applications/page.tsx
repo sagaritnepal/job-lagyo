@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Calendar } from "lucide-react";
+import { Calendar, FileText } from "lucide-react";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { getEmployerApplications } from "@/lib/data/dashboard";
+import { getResumeSignedUrl } from "@/lib/supabase/storage";
 import { statusMeta } from "@/lib/constants";
 import { CompanyBadge } from "@/components/CompanyBadge";
 import { StatusSelect } from "./StatusSelect";
@@ -33,6 +34,14 @@ export default async function ApplicationsPage({
   if (jobId) {
     applications = applications.filter((a) => a.job_id === jobId);
   }
+
+  const resumeUrls = new Map(
+    await Promise.all(
+      applications
+        .filter((a) => a.resume_url)
+        .map(async (a) => [a.id, await getResumeSignedUrl(a.resume_url!)] as const),
+    ),
+  );
 
   return (
     <div>
@@ -86,6 +95,17 @@ export default async function ApplicationsPage({
 
                 {app.cover_letter && (
                   <p className="mt-3 text-sm text-neutral-600">{app.cover_letter}</p>
+                )}
+
+                {resumeUrls.get(app.id) && (
+                  <a
+                    href={resumeUrls.get(app.id)!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 hover:underline"
+                  >
+                    <FileText className="h-3.5 w-3.5" /> View résumé
+                  </a>
                 )}
 
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 pt-3">

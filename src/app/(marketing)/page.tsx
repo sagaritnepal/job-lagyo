@@ -6,6 +6,8 @@ import { JobListItem } from "@/components/JobListItem";
 import { CompanyBadge } from "@/components/CompanyBadge";
 import { KathmanduSkyline } from "@/components/KathmanduSkyline";
 import { getCategoryCounts, getFeaturedJobs, getHomeStats, getTopCompanies } from "@/lib/data/jobs";
+import { getSavedJobIds } from "@/lib/data/savedJobs";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { JOB_CATEGORIES } from "@/lib/constants";
 
 const HOW_IT_WORKS = [
@@ -30,12 +32,14 @@ const HOW_IT_WORKS = [
 ];
 
 export default async function HomePage() {
-  const [jobs, stats, companies, categoryCounts] = await Promise.all([
+  const [jobs, stats, companies, categoryCounts, user] = await Promise.all([
     getFeaturedJobs(6),
     getHomeStats(),
     getTopCompanies(5),
     getCategoryCounts(),
+    getAuthUser(),
   ]);
+  const savedJobIds = user ? await getSavedJobIds(user.id) : new Set<string>();
 
   return (
     <div>
@@ -182,7 +186,12 @@ export default async function HomePage() {
         ) : (
           <div className="mt-6 space-y-3">
             {jobs.map((job) => (
-              <JobListItem key={job.id} job={job} />
+              <JobListItem
+                key={job.id}
+                job={job}
+                isSaved={savedJobIds.has(job.id)}
+                isLoggedIn={!!user}
+              />
             ))}
           </div>
         )}

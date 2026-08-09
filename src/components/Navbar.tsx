@@ -50,6 +50,22 @@ async function NavbarAuthSection() {
     <div className="flex items-center gap-2 sm:gap-4">
       {user ? (
         <>
+          {role === "candidate" && (
+            <>
+              <Link
+                href="/saved-jobs"
+                className="hidden text-sm font-medium text-neutral-600 hover:text-primary-700 sm:inline"
+              >
+                Saved Jobs
+              </Link>
+              <Link
+                href="/my-applications"
+                className="hidden text-sm font-medium text-neutral-600 hover:text-primary-700 sm:inline"
+              >
+                My Applications
+              </Link>
+            </>
+          )}
           {role === "employer" && (
             <Link
               href="/dashboard"

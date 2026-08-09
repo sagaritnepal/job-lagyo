@@ -46,7 +46,7 @@ export function SearchBar({
         defaultValue={defaultLocation}
         className="rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none focus:border-primary-500 sm:w-44"
       >
-        <option value="">Kathmandu, Nepal</option>
+        <option value="">All Locations</option>
         {NEPAL_LOCATIONS.map((loc) => (
           <option key={loc} value={loc}>
             {loc}

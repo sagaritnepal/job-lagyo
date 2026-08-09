@@ -2,22 +2,34 @@ import { createClient } from "@/lib/supabase/server";
 import type { Company, Job } from "@/lib/types";
 import { JOB_CATEGORY_NAMES } from "@/lib/constants";
 
+export type JobSort = "newest" | "salary";
+
 export interface JobFilters {
   q?: string;
   category?: string;
   location?: string;
   jobType?: string;
+  sort?: JobSort;
+  page?: number;
+  pageSize?: number;
 }
 
-export async function getPublishedJobs(filters: JobFilters = {}): Promise<Job[]> {
+export interface PublishedJobsResult {
+  jobs: Job[];
+  total: number;
+}
+
+export async function getPublishedJobs(filters: JobFilters = {}): Promise<PublishedJobsResult> {
   const supabase = await createClient();
+  const page = Math.max(1, filters.page ?? 1);
+  const pageSize = filters.pageSize ?? 20;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
 
   let query = supabase
     .from("jobs")
-    .select("*, company:companies(*)")
-    .eq("status", "published")
-    .order("featured", { ascending: false })
-    .order("created_at", { ascending: false });
+    .select("*, company:companies(*)", { count: "exact" })
+    .eq("status", "published");
 
   if (filters.q) {
     query = query.ilike("title", `%${filters.q}%`);
@@ -32,12 +44,18 @@ export async function getPublishedJobs(filters: JobFilters = {}): Promise<Job[]>
     query = query.eq("job_type", filters.jobType);
   }
 
-  const { data, error } = await query;
+  query = query.order("featured", { ascending: false });
+  if (filters.sort === "salary") {
+    query = query.order("salary_max", { ascending: false, nullsFirst: false });
+  }
+  query = query.order("created_at", { ascending: false }).range(from, to);
+
+  const { data, error, count } = await query;
   if (error) {
     console.error("getPublishedJobs error:", error.message);
-    return [];
+    return { jobs: [], total: 0 };
   }
-  return (data as Job[]) ?? [];
+  return { jobs: (data as Job[]) ?? [], total: count ?? 0 };
 }
 
 export async function getFeaturedJobs(limit = 6): Promise<Job[]> {
@@ -111,6 +129,38 @@ export async function getTopCompanies(limit = 5): Promise<Company[]> {
     return [];
   }
   return (data as Company[]) ?? [];
+}
+
+export async function getCompanyBySlug(slug: string): Promise<Company | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("companies")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_blacklisted", false)
+    .maybeSingle();
+
+  if (error) {
+    console.error("getCompanyBySlug error:", error.message);
+    return null;
+  }
+  return data as Company | null;
+}
+
+export async function getCompanyJobs(companyId: string): Promise<Job[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("jobs")
+    .select("*, company:companies(*)")
+    .eq("company_id", companyId)
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("getCompanyJobs error:", error.message);
+    return [];
+  }
+  return (data as Job[]) ?? [];
 }
 
 export async function getCategoryCounts(): Promise<Record<string, number>> {

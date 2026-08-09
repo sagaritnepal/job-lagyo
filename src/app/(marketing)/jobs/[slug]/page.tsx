@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Briefcase, Clock, MapPin, Wallet } from "lucide-react";
 import { getJobBySlug } from "@/lib/data/jobs";
+import { getSavedJobIds } from "@/lib/data/savedJobs";
 import { daysLeft, formatSalary, timeAgo } from "@/lib/format";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { CompanyBadge } from "@/components/CompanyBadge";
+import { SaveJobButton } from "@/components/SaveJobButton";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { ApplyForm } from "./ApplyForm";
 
@@ -73,6 +75,8 @@ export default async function JobDetailPage({
   const [job, user] = await Promise.all([getJobBySlug(slug), getAuthUser()]);
 
   if (!job) notFound();
+
+  const savedJobIds = user ? await getSavedJobIds(user.id) : new Set<string>();
 
   const remaining = job.deadline ? daysLeft(job.deadline) : null;
   const requirementLines =
@@ -168,14 +172,21 @@ export default async function JobDetailPage({
       </Link>
 
       <div className="mt-4 rounded-xl border border-neutral-200 bg-white p-6 sm:p-8">
-        <div className="flex items-start gap-3">
-          <CompanyBadge name={job.company?.name ?? job.title} size="md" />
-          <div>
-            <h1 className="text-2xl font-bold text-neutral-900">{job.title}</h1>
-            <p className="mt-1 text-sm font-medium text-primary-700">
-              {companyName}
-            </p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <CompanyBadge name={job.company?.name ?? job.title} size="md" />
+            <div>
+              <h1 className="text-2xl font-bold text-neutral-900">{job.title}</h1>
+              <p className="mt-1 text-sm font-medium text-primary-700">
+                {companyName}
+              </p>
+            </div>
           </div>
+          <SaveJobButton
+            jobId={job.id}
+            initialSaved={savedJobIds.has(job.id)}
+            isLoggedIn={!!user}
+          />
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3">

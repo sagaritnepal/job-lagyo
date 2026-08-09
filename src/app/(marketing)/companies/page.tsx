@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Building2, Globe, MapPin } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { CompanyBadge } from "@/components/CompanyBadge";
@@ -39,30 +40,40 @@ export default async function CompaniesPage() {
               key={company.id}
               className="rounded-xl border border-neutral-200 bg-white p-5"
             >
-              <div className="flex items-center gap-3">
+              <Link href={`/companies/${company.slug}`} className="flex items-center gap-3 group">
                 <CompanyBadge name={company.name} />
                 <div>
-                  <h2 className="font-semibold text-neutral-900">{company.name}</h2>
+                  <h2 className="font-semibold text-neutral-900 group-hover:text-primary-700">
+                    {company.name}
+                  </h2>
                   <p className="flex items-center gap-1 text-xs text-neutral-500">
                     <MapPin className="h-3 w-3" /> {company.location}
                   </p>
                 </div>
-              </div>
+              </Link>
               {company.description && (
                 <p className="mt-3 line-clamp-3 text-sm text-neutral-600">
                   {company.description}
                 </p>
               )}
-              {company.website && (
-                <a
-                  href={company.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:underline"
+              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <Link
+                  href={`/companies/${company.slug}`}
+                  className="text-sm font-medium text-primary-700 hover:underline"
                 >
-                  <Globe className="h-3.5 w-3.5" /> Visit website
-                </a>
-              )}
+                  View open roles →
+                </Link>
+                {company.website && (
+                  <a
+                    href={company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:underline"
+                  >
+                    <Globe className="h-3.5 w-3.5" /> Visit website
+                  </a>
+                )}
+              </div>
             </div>
           ))}
         </div>

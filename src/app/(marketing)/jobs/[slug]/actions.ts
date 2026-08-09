@@ -8,6 +8,13 @@ export type ApplyState = {
   message?: string;
 };
 
+const MAX_RESUME_BYTES = 5 * 1024 * 1024;
+const ALLOWED_RESUME_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 export async function applyToJobAction(
   jobId: string,
   jobSlug: string,
@@ -27,11 +34,43 @@ export async function applyToJobAction(
   }
 
   const coverLetter = formData.get("cover_letter")?.toString().trim() ?? "";
+  const resume = formData.get("resume");
+  let resumePath: string | null = null;
+
+  if (resume instanceof File && resume.size > 0) {
+    if (resume.size > MAX_RESUME_BYTES) {
+      return {
+        status: "error",
+        message: "Résumé must be 5MB or smaller.",
+      };
+    }
+    if (!ALLOWED_RESUME_TYPES.includes(resume.type)) {
+      return {
+        status: "error",
+        message: "Résumé must be a PDF or Word document.",
+      };
+    }
+
+    const ext = resume.name.split(".").pop() ?? "pdf";
+    const path = `${user.id}/${jobId}-${Date.now()}.${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from("resumes")
+      .upload(path, resume, { contentType: resume.type });
+
+    if (uploadError) {
+      return {
+        status: "error",
+        message: "Something went wrong uploading your résumé.",
+      };
+    }
+    resumePath = path;
+  }
 
   const { error } = await supabase.from("applications").insert({
     job_id: jobId,
     applicant_id: user.id,
     cover_letter: coverLetter || null,
+    resume_url: resumePath,
   });
 
   if (error) {
@@ -48,5 +87,6 @@ export async function applyToJobAction(
   }
 
   revalidatePath(`/jobs/${jobSlug}`);
+  revalidatePath("/my-applications");
   return { status: "success", message: "Application submitted successfully!" };
 }

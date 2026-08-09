@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Briefcase, MapPin, Wallet } from "lucide-react";
 import type { Job } from "@/lib/types";
 import { CompanyBadge } from "@/components/CompanyBadge";
+import { SaveJobButton } from "@/components/SaveJobButton";
 import { formatSalary } from "@/lib/format";
 
 const JOB_TYPE_LABEL: Record<string, string> = {
@@ -12,7 +13,15 @@ const JOB_TYPE_LABEL: Record<string, string> = {
   remote: "Remote",
 };
 
-export function JobListItem({ job }: { job: Job }) {
+export function JobListItem({
+  job,
+  isSaved = false,
+  isLoggedIn = false,
+}: {
+  job: Job;
+  isSaved?: boolean;
+  isLoggedIn?: boolean;
+}) {
   return (
     <Link
       href={`/jobs/${job.slug}`}
@@ -34,11 +43,14 @@ export function JobListItem({ job }: { job: Job }) {
             </p>
           </div>
         </div>
-        {job.featured && (
-          <span className="shrink-0 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-700">
-            FEATURED
-          </span>
-        )}
+        <div className="flex shrink-0 items-center gap-2">
+          {job.featured && (
+            <span className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-700">
+              FEATURED
+            </span>
+          )}
+          <SaveJobButton jobId={job.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+        </div>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-neutral-600">

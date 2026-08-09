@@ -27,7 +27,16 @@ Design reference: [Figma — Job Lagyo](https://figma.com/design/MYGBhkDW3yxffqT
 
 2. **Create a Supabase project** at [supabase.com](https://supabase.com), then in the SQL Editor run, in order:
    - [`supabase/schema.sql`](supabase/schema.sql) — creates tables, RLS policies, and the profile-creation trigger
+   - [`supabase/migrations/`](supabase/migrations) — run each numbered file in order
    - [`supabase/seed.sql`](supabase/seed.sql) — optional sample Nepal job data (edit the `owner_id` placeholders first)
+
+   Then, under **Authentication > Email Templates**, point the **Confirm signup** and **Reset Password** templates at the app's own confirmation route instead of Supabase's hosted verify page, so `token_hash`-based verification in [`src/app/auth/confirm/route.ts`](src/app/auth/confirm/route.ts) works. Set each template's link to:
+
+   ```
+   {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type={{ .Type }}
+   ```
+
+   Both templates use the exact same link shape — `type` is set by Supabase per email (`signup` vs `recovery`), and the confirm route uses it to send signups home and password resets to `/reset-password`.
 
 3. **Configure environment variables** — copy `.env.example` to `.env.local` and fill in your Supabase project URL and anon key (Project Settings > API):
 

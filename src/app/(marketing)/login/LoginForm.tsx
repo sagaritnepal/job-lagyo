@@ -6,9 +6,10 @@ import { loginAction, type AuthState } from "./actions";
 
 const initialState: AuthState = {};
 
-export function LoginForm() {
+export function LoginForm({ next = "/" }: { next?: string }) {
+  const loginWithNext = loginAction.bind(null, next);
   const [state, formAction, pending] = useActionState(
-    loginAction,
+    loginWithNext,
     initialState,
   );
 
@@ -30,9 +31,17 @@ export function LoginForm() {
           />
         </div>
         <div>
-          <label className="text-sm font-medium text-neutral-700">
-            Password
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-neutral-700">
+              Password
+            </label>
+            <Link
+              href="/forgot-password"
+              className="text-sm font-medium text-primary-700 hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
           <input
             type="password"
             name="password"

@@ -51,3 +51,7 @@ android/local.properties
 android/.idea
 android/app/src/main/assets/public
 android/app/src/main/assets/capacitor.config.json
+
+# release signing — never commit the keystore or its passwords
+android/keystore/
+android/keystore.properties

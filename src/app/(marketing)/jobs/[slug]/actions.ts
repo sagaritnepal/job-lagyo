@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { isCandidateProfileComplete } from "@/lib/data/candidateProfile";
 
 export type ApplyState = {
   status: "idle" | "success" | "error";
@@ -30,6 +31,19 @@ export async function applyToJobAction(
     return {
       status: "error",
       message: "Please log in as a candidate to apply.",
+    };
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profile?.role === "candidate" && !(await isCandidateProfileComplete(user.id))) {
+    return {
+      status: "error",
+      message: "Complete your profile — field of expertise and education — before applying.",
     };
   }
 

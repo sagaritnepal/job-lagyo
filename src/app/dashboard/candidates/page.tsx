@@ -26,6 +26,26 @@ export default async function CandidatesPage() {
 
   const rows = Array.from(candidates.values());
 
+  // Soft-prioritize candidates who applied to the employer's most-common
+  // job categories — a default ordering, not a filter (everyone still
+  // shows up).
+  const categoryCounts = new Map<string, number>();
+  for (const app of applications) {
+    const category = app.job?.category;
+    if (category) categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
+  }
+  const topCategories = new Set(
+    Array.from(categoryCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([category]) => category),
+  );
+  rows.sort((a, b) => {
+    const aTop = a.applications.some((app) => app.job?.category && topCategories.has(app.job.category));
+    const bTop = b.applications.some((app) => app.job?.category && topCategories.has(app.job.category));
+    return aTop === bTop ? 0 : aTop ? -1 : 1;
+  });
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-neutral-900">Candidates</h1>

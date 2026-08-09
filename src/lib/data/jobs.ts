@@ -12,6 +12,10 @@ export interface JobFilters {
   sort?: JobSort;
   page?: number;
   pageSize?: number;
+  // Soft-prioritize these categories (e.g. the viewer's declared field of
+  // expertise) without excluding anything else. Only applied on page 1
+  // when no explicit category filter or salary sort is active.
+  preferredCategories?: string[];
 }
 
 export interface PublishedJobsResult {
@@ -26,24 +30,64 @@ export async function getPublishedJobs(filters: JobFilters = {}): Promise<Publis
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  let query = supabase
-    .from("jobs")
-    .select("*, company:companies(*)", { count: "exact" })
-    .eq("status", "published");
+  function baseQuery() {
+    let query = supabase
+      .from("jobs")
+      .select("*, company:companies(*)", { count: "exact" })
+      .eq("status", "published");
 
-  if (filters.q) {
-    query = query.ilike("title", `%${filters.q}%`);
-  }
-  if (filters.category) {
-    query = query.eq("category", filters.category);
-  }
-  if (filters.location) {
-    query = query.eq("location", filters.location);
-  }
-  if (filters.jobType) {
-    query = query.eq("job_type", filters.jobType);
+    if (filters.q) query = query.ilike("title", `%${filters.q}%`);
+    if (filters.category) query = query.eq("category", filters.category);
+    if (filters.location) query = query.eq("location", filters.location);
+    if (filters.jobType) query = query.eq("job_type", filters.jobType);
+    return query;
   }
 
+  const preferredCategories = filters.preferredCategories?.filter(Boolean) ?? [];
+  const usePersonalization =
+    preferredCategories.length > 0 &&
+    !filters.category &&
+    page === 1 &&
+    filters.sort !== "salary";
+
+  if (usePersonalization) {
+    const [{ count }, { data: preferredData, error: preferredError }] = await Promise.all([
+      baseQuery().range(0, 0),
+      baseQuery()
+        .in("category", preferredCategories)
+        .order("featured", { ascending: false })
+        .order("created_at", { ascending: false })
+        .range(0, pageSize - 1),
+    ]);
+
+    if (preferredError) {
+      console.error("getPublishedJobs (preferred) error:", preferredError.message);
+    } else {
+      const preferredJobs = (preferredData as Job[]) ?? [];
+      const remaining = pageSize - preferredJobs.length;
+      let restJobs: Job[] = [];
+
+      if (remaining > 0) {
+        const excludeList = `(${preferredCategories
+          .map((c) => `"${c.replace(/"/g, '\\"')}"`)
+          .join(",")})`;
+        const { data: restData, error: restError } = await baseQuery()
+          .not("category", "in", excludeList)
+          .order("featured", { ascending: false })
+          .order("created_at", { ascending: false })
+          .range(0, remaining - 1);
+        if (restError) {
+          console.error("getPublishedJobs (rest) error:", restError.message);
+        } else {
+          restJobs = (restData as Job[]) ?? [];
+        }
+      }
+
+      return { jobs: [...preferredJobs, ...restJobs], total: count ?? 0 };
+    }
+  }
+
+  let query = baseQuery();
   query = query.order("featured", { ascending: false });
   if (filters.sort === "salary") {
     query = query.order("salary_max", { ascending: false, nullsFirst: false });

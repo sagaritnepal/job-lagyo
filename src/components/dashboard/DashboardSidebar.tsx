@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutGrid,
   Briefcase,
+  Building2,
   Users,
   UserCheck,
   MessageCircle,
@@ -17,6 +18,7 @@ import { useMobileNav } from "./MobileNavContext";
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
   { href: "/dashboard/jobs", label: "Job Posts", icon: Briefcase },
+  { href: "/dashboard/company", label: "Company", icon: Building2 },
   { href: "/dashboard/applications", label: "Applications", icon: UserCheck },
   { href: "/dashboard/candidates", label: "Candidates", icon: Users },
   { href: "/dashboard/messages", label: "Messages", icon: MessageCircle },

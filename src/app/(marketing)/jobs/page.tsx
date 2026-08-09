@@ -6,6 +6,9 @@ import { SearchBar } from "@/components/SearchBar";
 import { getPublishedJobs, type JobSort } from "@/lib/data/jobs";
 import { getSavedJobIds } from "@/lib/data/savedJobs";
 import { getAuthUser } from "@/lib/supabase/auth";
+import { createClient } from "@/lib/supabase/server";
+import { getCandidateProfile, isCandidateProfileComplete } from "@/lib/data/candidateProfile";
+import { ProfileCompletionBanner } from "@/components/ProfileCompletionBanner";
 import { JOB_CATEGORY_NAMES, JOB_TYPES, NEPAL_LOCATIONS } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -32,13 +35,34 @@ export default async function JobsPage({
   const jobType = typeof params.jobType === "string" ? params.jobType : "";
   const sort: JobSort = params.sort === "salary" ? "salary" : "newest";
   const page = Math.max(1, Number(params.page) || 1);
+  const showAll = params.all === "1";
 
-  const [{ jobs, total }, user] = await Promise.all([
-    getPublishedJobs({ q, category, location, jobType, sort, page, pageSize: PAGE_SIZE }),
-    getAuthUser(),
+  const user = await getAuthUser();
+
+  let preferredCategories: string[] = [];
+  let showProfileBanner = false;
+  if (user) {
+    const supabase = await createClient();
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (profile?.role === "candidate") {
+      showProfileBanner = !(await isCandidateProfileComplete(user.id));
+      if (!category && !showAll) {
+        const candidateProfile = await getCandidateProfile(user.id);
+        preferredCategories = candidateProfile?.categories ?? [];
+      }
+    }
+  }
+
+  const [{ jobs, total }, savedJobIds] = await Promise.all([
+    getPublishedJobs({ q, category, location, jobType, sort, page, pageSize: PAGE_SIZE, preferredCategories }),
+    user ? getSavedJobIds(user.id) : Promise.resolve(new Set<string>()),
   ]);
-  const savedJobIds = user ? await getSavedJobIds(user.id) : new Set<string>();
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const isPersonalized = preferredCategories.length > 0 && page === 1;
 
   function filterHref(
     next: Partial<Record<"category" | "location" | "jobType" | "sort" | "page", string>>,
@@ -63,6 +87,23 @@ export default async function JobsPage({
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-bold text-neutral-900">Browse Jobs</h1>
+
+      {showProfileBanner && (
+        <div className="mt-4">
+          <ProfileCompletionBanner />
+        </div>
+      )}
+
+      {isPersonalized && (
+        <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-primary-700">
+          Recommended for your profile — showing{" "}
+          {preferredCategories.length === 1 ? preferredCategories[0] : "your fields of expertise"}{" "}
+          first.
+          <Link href="/jobs?all=1" className="font-semibold underline">
+            Show all jobs
+          </Link>
+        </p>
+      )}
 
       <div className="mt-6">
         <SearchBar defaultQuery={q} defaultLocation={location} defaultCategory={category} />

@@ -31,49 +31,30 @@ export async function postJobAction(
     };
   }
 
-  let { data: company } = await supabase
+  const { data: company } = await supabase
     .from("companies")
-    .select("id, is_blacklisted")
+    .select("id, is_blacklisted, verification_status")
     .eq("owner_id", user.id)
     .maybeSingle();
 
-  if (company?.is_blacklisted) {
+  if (!company) {
+    return {
+      error: "Set up your company profile before posting a job.",
+    };
+  }
+
+  if (company.is_blacklisted) {
     return {
       error:
         "Your company has been blacklisted from posting jobs on Job Lagyo. Contact support if you believe this is a mistake.",
     };
   }
 
-  if (!company) {
-    const companyName = formData.get("company_name")?.toString().trim();
-    if (!companyName) {
-      return { error: "Company name is required." };
-    }
-    const companyLocation =
-      formData.get("company_location")?.toString() || "Kathmandu";
-
-    const { data: newCompany, error: companyError } = await supabase
-      .from("companies")
-      .insert({
-        owner_id: user.id,
-        name: companyName,
-        slug: uniqueSlug(companyName),
-        location: companyLocation,
-        website: formData.get("company_website")?.toString() || null,
-      })
-      .select("id")
-      .single();
-
-    if (companyError || !newCompany) {
-      return {
-        error: "Could not create your company profile. Please try again.",
-      };
-    }
-    company = { id: newCompany.id, is_blacklisted: false };
-  }
-
-  if (!company) {
-    return { error: "Could not find your company profile. Please try again." };
+  if (company.verification_status !== "verified") {
+    return {
+      error:
+        "Your company must complete VAT/PAN verification before you can post jobs. Submit your documents on the Company page.",
+    };
   }
 
   const title = formData.get("title")?.toString().trim();

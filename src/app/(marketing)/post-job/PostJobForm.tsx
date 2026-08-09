@@ -6,7 +6,7 @@ import { JOB_CATEGORY_NAMES, JOB_TYPES, NEPAL_LOCATIONS } from "@/lib/constants"
 
 const initialState: PostJobState = {};
 
-export function PostJobForm({ hasCompany }: { hasCompany: boolean }) {
+export function PostJobForm() {
   const [state, formAction, pending] = useActionState(
     postJobAction,
     initialState,
@@ -18,34 +18,6 @@ export function PostJobForm({ hasCompany }: { hasCompany: boolean }) {
 
   return (
     <form action={formAction} className="mt-6 space-y-8">
-      {!hasCompany && (
-        <fieldset className="space-y-4 rounded-xl border border-neutral-200 p-4">
-          <legend className="px-1 text-sm font-semibold text-neutral-800">
-            Company details (first job posting only)
-          </legend>
-          <div>
-            <label className={labelClass}>Company name</label>
-            <input type="text" name="company_name" required className={inputClass} />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className={labelClass}>Location</label>
-              <select name="company_location" defaultValue="Kathmandu" className={inputClass}>
-                {NEPAL_LOCATIONS.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className={labelClass}>Website (optional)</label>
-              <input type="url" name="company_website" placeholder="https://" className={inputClass} />
-            </div>
-          </div>
-        </fieldset>
-      )}
-
       <fieldset className="space-y-4 rounded-xl border border-neutral-200 p-4">
         <legend className="px-1 text-sm font-semibold text-neutral-800">
           Job details

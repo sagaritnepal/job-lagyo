@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { LogoutButton } from "@/components/LogoutButton";
@@ -14,7 +15,11 @@ export default async function SettingsPage() {
 
   const [{ data: profile }, { data: company }] = await Promise.all([
     supabase.from("profiles").select("full_name, phone, role").eq("id", user.id).maybeSingle(),
-    supabase.from("companies").select("name, location, website").eq("owner_id", user.id).maybeSingle(),
+    supabase
+      .from("companies")
+      .select("name, location, website, verification_status")
+      .eq("owner_id", user.id)
+      .maybeSingle(),
   ]);
 
   return (
@@ -44,9 +49,9 @@ export default async function SettingsPage() {
           </dl>
         </div>
 
-        {company && (
-          <div className="rounded-xl border border-neutral-200 bg-white p-5">
-            <h2 className="font-semibold text-neutral-900">Company</h2>
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+          <h2 className="font-semibold text-neutral-900">Company</h2>
+          {company ? (
             <dl className="mt-3 space-y-2 text-sm">
               <div className="flex justify-between">
                 <dt className="text-neutral-500">Name</dt>
@@ -62,9 +67,21 @@ export default async function SettingsPage() {
                   <dd className="text-neutral-900">{company.website}</dd>
                 </div>
               )}
+              <div className="flex justify-between">
+                <dt className="text-neutral-500">Verification</dt>
+                <dd className="capitalize text-neutral-900">{company.verification_status}</dd>
+              </div>
             </dl>
-          </div>
-        )}
+          ) : (
+            <p className="mt-2 text-sm text-neutral-500">You haven&apos;t set up a company profile yet.</p>
+          )}
+          <Link
+            href="/dashboard/company"
+            className="mt-3 inline-block text-sm font-semibold text-primary-700 hover:underline"
+          >
+            {company ? "Edit company & verification →" : "Set up your company →"}
+          </Link>
+        </div>
 
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
           <h2 className="font-semibold text-neutral-900">Session</h2>

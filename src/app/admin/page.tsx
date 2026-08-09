@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShieldCheck, Flag, Briefcase, Building2, Ban } from "lucide-react";
+import { ShieldCheck, Flag, Briefcase, Building2, Ban, BadgeCheck } from "lucide-react";
 import { getAdminStats } from "@/lib/data/admin";
 import { StatCard } from "@/components/dashboard/StatCard";
 
@@ -17,10 +17,11 @@ export default async function AdminOverviewPage() {
         Review job approvals, fraud flags, and vendor standing across Job Lagyo.
       </p>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard label="Pending approvals" value={stats.pendingJobs} deltaPct={null} icon={ShieldCheck} />
         <StatCard label="Flagged for fraud" value={stats.flaggedJobs} deltaPct={null} icon={Flag} />
         <StatCard label="Live job posts" value={stats.publishedJobs} deltaPct={null} icon={Briefcase} />
+        <StatCard label="Pending verifications" value={stats.pendingVerifications} deltaPct={null} icon={BadgeCheck} />
         <StatCard label="Blacklisted vendors" value={stats.blacklistedVendors} deltaPct={null} icon={Ban} />
       </div>
 
@@ -46,7 +47,7 @@ export default async function AdminOverviewPage() {
           </p>
           <p className="mt-1 text-sm text-neutral-500">
             {stats.totalVendors} vendor{stats.totalVendors === 1 ? "" : "s"} on the platform,{" "}
-            {stats.blacklistedVendors} blacklisted.
+            {stats.pendingVerifications} awaiting verification, {stats.blacklistedVendors} blacklisted.
           </p>
         </Link>
       </div>

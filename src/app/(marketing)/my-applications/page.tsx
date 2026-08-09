@@ -3,10 +3,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Calendar, FileText } from "lucide-react";
 import { getAuthUser } from "@/lib/supabase/auth";
+import { createClient } from "@/lib/supabase/server";
 import { getCandidateApplications } from "@/lib/data/applications";
+import { isCandidateProfileComplete } from "@/lib/data/candidateProfile";
 import { getResumeSignedUrl } from "@/lib/supabase/storage";
 import { statusMeta } from "@/lib/constants";
 import { CompanyBadge } from "@/components/CompanyBadge";
+import { ProfileCompletionBanner } from "@/components/ProfileCompletionBanner";
 
 export const metadata: Metadata = {
   title: "My Applications",
@@ -17,7 +20,17 @@ export default async function MyApplicationsPage() {
   const user = await getAuthUser();
   if (!user) redirect("/login?next=/my-applications");
 
-  const applications = await getCandidateApplications(user.id);
+  const supabase = await createClient();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const [applications, profileComplete] = await Promise.all([
+    getCandidateApplications(user.id),
+    profile?.role === "candidate" ? isCandidateProfileComplete(user.id) : Promise.resolve(true),
+  ]);
   const resumeUrls = new Map(
     await Promise.all(
       applications
@@ -32,6 +45,12 @@ export default async function MyApplicationsPage() {
       <p className="mt-1 text-sm text-neutral-500">
         Track the status of every job you&apos;ve applied to on Job Lagyo.
       </p>
+
+      {!profileComplete && (
+        <div className="mt-4">
+          <ProfileCompletionBanner />
+        </div>
+      )}
 
       {applications.length === 0 ? (
         <p className="mt-8 rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-10 text-center text-sm text-neutral-500">

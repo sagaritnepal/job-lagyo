@@ -6,6 +6,8 @@ import { getJobBySlug } from "@/lib/data/jobs";
 import { getSavedJobIds } from "@/lib/data/savedJobs";
 import { daysLeft, formatSalary, timeAgo } from "@/lib/format";
 import { getAuthUser } from "@/lib/supabase/auth";
+import { createClient } from "@/lib/supabase/server";
+import { isCandidateProfileComplete } from "@/lib/data/candidateProfile";
 import { CompanyBadge } from "@/components/CompanyBadge";
 import { SaveJobButton } from "@/components/SaveJobButton";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -77,6 +79,19 @@ export default async function JobDetailPage({
   if (!job) notFound();
 
   const savedJobIds = user ? await getSavedJobIds(user.id) : new Set<string>();
+
+  let profileIncomplete = false;
+  if (user) {
+    const supabase = await createClient();
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (profile?.role === "candidate") {
+      profileIncomplete = !(await isCandidateProfileComplete(user.id));
+    }
+  }
 
   const remaining = job.deadline ? daysLeft(job.deadline) : null;
   const requirementLines =
@@ -262,7 +277,16 @@ export default async function JobDetailPage({
 
         <div className="mt-8 border-t border-neutral-200 pt-6">
           {user ? (
-            <ApplyForm jobId={job.id} jobSlug={job.slug} />
+            profileIncomplete ? (
+              <p className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                Complete your profile — field of expertise and education — before applying.{" "}
+                <Link href="/profile" className="font-semibold text-amber-900 hover:underline">
+                  Complete your profile →
+                </Link>
+              </p>
+            ) : (
+              <ApplyForm jobId={job.id} jobSlug={job.slug} />
+            )
           ) : (
             <p className="text-sm text-neutral-600">
               <Link href="/login" className="font-semibold text-primary-700">

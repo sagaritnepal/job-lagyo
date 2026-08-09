@@ -74,6 +74,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: SITE_NAME,
+  },
 };
 
 export const viewport: Viewport = {
@@ -81,6 +86,7 @@ export const viewport: Viewport = {
   colorScheme: "light",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 const organizationJsonLd = {

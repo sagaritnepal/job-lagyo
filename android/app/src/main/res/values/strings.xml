@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Job Lagyo</string>
+    <string name="title_activity_main">Job Lagyo</string>
+    <string name="package_name">com.joblagyo.app</string>
+    <string name="custom_url_scheme">com.joblagyo.app</string>
+</resources>

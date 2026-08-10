@@ -1,9 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import { headers } from "next/headers";
 import { Geist, Geist_Mono, Noto_Sans_Devanagari } from "next/font/google";
 import { BRAND_NAVY, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { AppShellInit } from "@/components/AppShellInit";
 import "./globals.css";
+
+// job-lagyo-app.vercel.app is the URL the installed Android app loads
+// (see capacitor.config.ts). Forcing the native-app chrome (tab bar,
+// hidden navbar/footer) whenever this host is hit — not just when
+// window.Capacitor reports a native platform — lets anyone preview the
+// app's look in an ordinary desktop browser, not only on-device.
+const APP_HOSTNAMES = new Set(["job-lagyo-app.vercel.app"]);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -112,12 +120,15 @@ const websiteJsonLd = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const host = (await headers()).get("host") ?? "";
+  const isAppHost = APP_HOSTNAMES.has(host.split(":")[0]);
+
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${notoSansDevanagari.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${notoSansDevanagari.variable} h-full antialiased${isAppHost ? " capacitor-app" : ""}`}
     >
       <head>
         {/*

@@ -44,33 +44,37 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-neutral-900 px-4 pb-32 pt-16 sm:px-6 sm:pb-40 sm:pt-20">
-        <Image
-          src="/Bouddhanath-Stupa-amazing-vieww-1536x1152.jpg"
-          alt="Boudhanath Stupa, Kathmandu"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/90 via-neutral-900/85 to-primary-950/95" />
+      <section className="hero-shell relative overflow-hidden bg-neutral-900 px-4 pb-32 pt-16 sm:px-6 sm:pb-40 sm:pt-20">
+        <div className="web-chrome contents">
+          <Image
+            src="/Bouddhanath-Stupa-amazing-vieww-1536x1152.jpg"
+            alt="Boudhanath Stupa, Kathmandu"
+            fill
+            priority
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/90 via-neutral-900/85 to-primary-950/95" />
+        </div>
         <div className="relative z-10 mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white">
-            #1 Job Portal in Nepal
-          </span>
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-            Find Your Dream Career in Nepal
-          </h1>
-          <p className="mt-2 text-sm text-primary-200">रोजगारको लागि तपाईंको भरपर्दो साथी</p>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-300 sm:text-base">
-            Explore thousands of verified job opportunities from Nepal&apos;s top
-            employers. Fast, friendly, and easy.
-          </p>
+          <div className="web-chrome contents">
+            <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white">
+              #1 Job Portal in Nepal
+            </span>
+            <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+              Find Your Dream Career in Nepal
+            </h1>
+            <p className="mt-2 text-sm text-primary-200">रोजगारको लागि तपाईंको भरपर्दो साथी</p>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-300 sm:text-base">
+              Explore thousands of verified job opportunities from Nepal&apos;s top
+              employers. Fast, friendly, and easy.
+            </p>
+          </div>
 
           <div className="mx-auto mt-8 max-w-2xl">
             <SearchBar />
           </div>
 
-          <div className="mt-6 text-xs text-white/80 sm:mt-5">
+          <div className="web-chrome mt-6 text-xs text-white/80 sm:mt-5">
             <span className="block font-medium sm:inline">Popular Searches:</span>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-2 sm:mt-0 sm:inline-flex">
               {["React Developer", "Digital Marketing", "Sales Manager", "Teacher"].map((term) => (
@@ -85,11 +89,13 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
-        <KathmanduSkyline />
+        <div className="web-chrome contents">
+          <KathmanduSkyline />
+        </div>
       </section>
 
       {/* Stats */}
-      <section className="border-b border-neutral-100 bg-white px-4 py-10 sm:px-6">
+      <section className="web-chrome border-b border-neutral-100 bg-white px-4 py-10 sm:px-6">
         <div className="mx-auto grid max-w-5xl grid-cols-2 gap-6 text-center sm:grid-cols-4">
           {[
             { label: "Active Job Openings", value: stats.activeJobs },
@@ -140,7 +146,7 @@ export default async function HomePage() {
 
       {/* Top companies */}
       {companies.length > 0 && (
-        <section className="border-y border-neutral-100 bg-neutral-50 px-4 py-14 sm:px-6">
+        <section className="web-chrome border-y border-neutral-100 bg-neutral-50 px-4 py-14 sm:px-6">
           <div className="mx-auto max-w-6xl text-center">
             <h2 className="text-2xl font-bold text-neutral-900">Top Companies Hiring Now</h2>
             <p className="mt-1 text-sm text-neutral-500">
@@ -198,7 +204,7 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="border-y border-neutral-100 bg-neutral-50 px-4 py-14 sm:px-6">
+      <section className="web-chrome border-y border-neutral-100 bg-neutral-50 px-4 py-14 sm:px-6">
         <div className="mx-auto max-w-5xl text-center">
           <h2 className="text-2xl font-bold text-neutral-900">How Job Lagyo Works</h2>
           <p className="mt-1 text-sm text-neutral-500">
@@ -222,7 +228,7 @@ export default async function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-primary-700">
+      <section className="web-chrome bg-primary-700">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-5 px-4 py-14 text-center sm:px-6">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
             Ready to find your next opportunity?
@@ -248,7 +254,7 @@ export default async function HomePage() {
       </section>
 
       {/* Success stories */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <section className="web-chrome mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <h2 className="text-center text-2xl font-bold text-neutral-900">Success Stories</h2>
         <p className="mt-1 text-center text-sm text-neutral-500">
           Hear from happy job seekers who found their path through Job Lagyo.
@@ -285,7 +291,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-6 sm:px-6">
+      <section className="web-chrome mx-auto max-w-6xl px-4 pb-6 sm:px-6">
         <div className="flex items-center justify-center gap-1 text-xs text-neutral-400">
           <MapPin className="h-3.5 w-3.5" /> Proudly built in Kathmandu, Nepal
         </div>

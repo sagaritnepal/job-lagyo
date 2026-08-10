@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono, Noto_Sans_Devanagari } from "next/font/google";
 import { BRAND_NAVY, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { AppShellInit } from "@/components/AppShellInit";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -114,9 +116,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${notoSansDevanagari.variable} h-full antialiased`}
     >
+      <head>
+        {/*
+          Runs before hydration so browser-only chrome (see .web-chrome in
+          globals.css) never flashes on screen inside the native app shell.
+        */}
+        <Script id="capacitor-detect" strategy="beforeInteractive">
+          {`(function(){try{if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()){document.documentElement.classList.add('capacitor-app');}}catch(e){}})();`}
+        </Script>
+      </head>
       <body className="min-h-full">
+        <AppShellInit />
         {children}
         <script
           type="application/ld+json"

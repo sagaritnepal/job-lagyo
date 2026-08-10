@@ -61,3 +61,25 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/*
+ * Set by an inline script in the <head> before hydration, only when the page
+ * is running inside the Capacitor native shell (window.Capacitor present).
+ * Browser-only chrome (hamburger menu, header auth buttons, footer sitemap)
+ * gets stripped so the app relies solely on the native bottom tab bar.
+ */
+html.capacitor-app,
+html.capacitor-app body {
+  overscroll-behavior-y: none;
+}
+
+html.capacitor-app .web-chrome {
+  display: none !important;
+}
+
+/* Marketing hero becomes a plain white search block inside the app. */
+html.capacitor-app .hero-shell {
+  background: #ffffff !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1.5rem !important;
+}

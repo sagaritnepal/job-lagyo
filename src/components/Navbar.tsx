@@ -14,11 +14,13 @@ export function Navbar() {
           <Logo className="text-3xl sm:text-[2rem]" />
         </Link>
 
-        <NavLinks />
+        <div className="web-chrome contents">
+          <NavLinks />
 
-        <Suspense fallback={<NavbarAuthFallback />}>
-          <NavbarAuthSection />
-        </Suspense>
+          <Suspense fallback={<NavbarAuthFallback />}>
+            <NavbarAuthSection />
+          </Suspense>
+        </div>
       </div>
     </header>
   );

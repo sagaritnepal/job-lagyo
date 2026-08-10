@@ -3,7 +3,7 @@ import { Logo } from "@/components/Logo";
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-neutral-200 bg-neutral-50 pb-16 md:pb-0">
+    <footer className="web-chrome mt-auto border-t border-neutral-200 bg-neutral-50 pb-16 md:pb-0">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row">
           <div>

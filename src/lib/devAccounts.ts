@@ -13,7 +13,11 @@ export const DEV_ACCOUNTS: Record<
   admin: { label: "Admin", email: "admin@joblagyo.dev", password: "Admin@Lagyo2026" },
 };
 
-// Guards both the panel's visibility and the server action itself, so the
-// switcher can never fire in a production deployment even if someone finds
-// the route.
-export const isDevRoleSwitcherEnabled = process.env.NODE_ENV !== "production";
+// Guards both the panel's visibility and the server action itself.
+//
+// TEMPORARY, PRE-LAUNCH TESTING PHASE ONLY: forced to `true` so the switcher
+// is reachable from the phone app, which only ever loads the production
+// deployment. Revert to the commented-out line below once testing is done
+// and before real users are on the site.
+export const isDevRoleSwitcherEnabled = true;
+// export const isDevRoleSwitcherEnabled = process.env.NODE_ENV !== "production";

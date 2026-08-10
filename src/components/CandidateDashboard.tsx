@@ -63,6 +63,40 @@ export async function CandidateDashboard({ user }: { user: User }) {
         </p>
       </div>
 
+      <div className="mt-3.5 rounded-lg border border-neutral-200 bg-white p-3.5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-neutral-900">Profile Strength</h2>
+          <span className="text-sm font-bold text-primary-700">{completionPct}%</span>
+        </div>
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
+          <div
+            className="h-full rounded-full bg-primary-600 transition-all duration-700"
+            style={{ width: `${completionPct}%` }}
+          />
+        </div>
+        <ul className="mt-3 grid gap-1 sm:grid-cols-2">
+          {checklist.map((item) => (
+            <li key={item.label} className="flex items-center gap-2 text-xs">
+              {item.done ? (
+                <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-600" />
+              ) : (
+                <Circle className="h-3.5 w-3.5 shrink-0 text-neutral-300" />
+              )}
+              <span className={item.done ? "text-neutral-700" : "text-neutral-500"}>
+                {item.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href="/profile"
+          className="mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 sm:w-fit sm:px-6"
+        >
+          {completedCount === checklist.length ? "Edit Profile" : "Complete Your Profile"}
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+
       <div className="mt-3.5 grid gap-3 sm:grid-cols-3">
         <StatCard
           label="Applications Sent"
@@ -155,40 +189,6 @@ export async function CandidateDashboard({ user }: { user: User }) {
         </div>
 
         <div className="space-y-3.5">
-          <div className="rounded-lg border border-neutral-200 bg-white p-3.5">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-neutral-900">Profile Strength</h2>
-              <span className="text-sm font-bold text-primary-700">{completionPct}%</span>
-            </div>
-            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
-              <div
-                className="h-full rounded-full bg-primary-600 transition-all duration-700"
-                style={{ width: `${completionPct}%` }}
-              />
-            </div>
-            <ul className="mt-3 space-y-1">
-              {checklist.map((item) => (
-                <li key={item.label} className="flex items-center gap-2 text-xs">
-                  {item.done ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-600" />
-                  ) : (
-                    <Circle className="h-3.5 w-3.5 shrink-0 text-neutral-300" />
-                  )}
-                  <span className={item.done ? "text-neutral-700" : "text-neutral-500"}>
-                    {item.label}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/profile"
-              className="mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700"
-            >
-              {completedCount === checklist.length ? "Edit Profile" : "Complete Your Profile"}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-
           <div className="rounded-lg border border-neutral-200 bg-white p-3.5">
             <h2 className="text-sm font-semibold text-neutral-900">Quick Actions</h2>
             <div className="mt-2 space-y-1.5">

@@ -13,9 +13,20 @@ import { execSync } from "child_process";
 
 const APP_ALIAS = "job-lagyo-app.vercel.app";
 
+// `vercel deploy` picks up VERCEL_ORG_ID/VERCEL_PROJECT_ID automatically to
+// skip interactive project linking, but `vercel alias set` doesn't — in CI
+// (no locally linked .vercel/project.json) it falls back to an ambiguous
+// default scope and fails with "User not found". Pass --scope explicitly
+// whenever we know the org id (both locally, where `vercel login` already
+// scoped things, and in CI).
+const scopeArgs = process.env.VERCEL_ORG_ID ? ["--scope", process.env.VERCEL_ORG_ID] : [];
+
 console.log(`Deploying to Preview, then aliasing to ${APP_ALIAS} ...\n`);
 
-const output = execSync("npx vercel deploy", { encoding: "utf8", stdio: ["inherit", "pipe", "inherit"] });
+const output = execSync(["npx", "vercel", "deploy", ...scopeArgs].join(" "), {
+  encoding: "utf8",
+  stdio: ["inherit", "pipe", "inherit"],
+});
 process.stdout.write(output);
 
 const match = output.match(/https:\/\/[a-zA-Z0-9.-]+\.vercel\.app/g);
@@ -26,6 +37,8 @@ if (!deploymentUrl) {
 }
 
 console.log(`\nAliasing ${deploymentUrl} -> ${APP_ALIAS} ...`);
-execSync(`npx vercel alias set ${deploymentUrl} ${APP_ALIAS}`, { stdio: "inherit" });
+execSync(["npx", "vercel", "alias", "set", deploymentUrl, APP_ALIAS, ...scopeArgs].join(" "), {
+  stdio: "inherit",
+});
 
 console.log(`\nDone. https://${APP_ALIAS} now serves this deployment.`);

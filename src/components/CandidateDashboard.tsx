@@ -64,9 +64,27 @@ export async function CandidateDashboard({ user }: { user: User }) {
       </div>
 
       <div className="mt-3.5 grid gap-3 sm:grid-cols-3">
-        <StatCard label="Applications Sent" value={applications.length} deltaPct={null} icon={FileText} />
-        <StatCard label="Saved Jobs" value={savedJobs.length} deltaPct={null} icon={Bookmark} />
-        <StatCard label="In Progress" value={shortlistedCount} deltaPct={null} icon={Sparkles} />
+        <StatCard
+          label="Applications Sent"
+          value={applications.length}
+          deltaPct={null}
+          icon={FileText}
+          href="/my-applications"
+        />
+        <StatCard
+          label="Saved Jobs"
+          value={savedJobs.length}
+          deltaPct={null}
+          icon={Bookmark}
+          href="/saved-jobs"
+        />
+        <StatCard
+          label="In Progress"
+          value={shortlistedCount}
+          deltaPct={null}
+          icon={Sparkles}
+          href="/my-applications?tab=in-progress"
+        />
       </div>
 
       <div className="mt-3.5 grid gap-3.5 lg:grid-cols-[1fr_300px]">

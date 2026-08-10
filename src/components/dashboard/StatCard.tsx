@@ -1,35 +1,5 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import { TrendingDown, TrendingUp, type LucideIcon } from "lucide-react";
-
-// Eases a stat from 0 to its real value on mount/update so dashboards feel
-// alive rather than static — purely cosmetic, the real value is always what
-// gets shown at rest.
-function useCountUp(value: number, durationMs = 650) {
-  const [display, setDisplay] = useState(0);
-  const frame = useRef<number | null>(null);
-
-  useEffect(() => {
-    const start = performance.now();
-    const from = 0;
-
-    function tick(now: number) {
-      const elapsed = now - start;
-      const progress = Math.min(1, elapsed / durationMs);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(from + (value - from) * eased));
-      if (progress < 1) frame.current = requestAnimationFrame(tick);
-    }
-
-    frame.current = requestAnimationFrame(tick);
-    return () => {
-      if (frame.current !== null) cancelAnimationFrame(frame.current);
-    };
-  }, [value, durationMs]);
-
-  return display;
-}
+import { CountUpNumber } from "./CountUpNumber";
 
 export function StatCard({
   label,
@@ -42,8 +12,6 @@ export function StatCard({
   deltaPct: number | null;
   icon: LucideIcon;
 }) {
-  const animatedValue = useCountUp(value);
-
   return (
     <div className="group rounded-xl border border-neutral-200 bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-md">
       <div className="flex items-center justify-between">
@@ -53,7 +21,7 @@ export function StatCard({
         </span>
       </div>
       <p className="mt-2 text-3xl font-extrabold tabular-nums text-neutral-900">
-        {animatedValue.toLocaleString()}
+        <CountUpNumber value={value} />
       </p>
       {deltaPct !== null && (
         <p

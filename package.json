@@ -9,7 +9,7 @@
     "start:server": "node server.js",
     "lint": "eslint",
     "seed:users": "node --env-file=.env.local supabase/seed-users.mjs",
-    "deploy:website": "vercel deploy --prod",
+    "deploy:website": "npx vercel deploy --prod",
     "deploy:app": "node scripts/deploy-app.mjs"
   },
   "engines": {

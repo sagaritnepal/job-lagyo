@@ -49,27 +49,35 @@ export default async function ProfilePage() {
     { label: "Certificate / document proof", done: certificates.length > 0 },
   ];
   const completedCount = checklist.filter((c) => c.done).length;
+  const completionPct = Math.round((completedCount / checklist.length) * 100);
   const canApply = checklist[0].done && checklist[1].done;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <h1 className="text-2xl font-bold text-neutral-900">My Profile</h1>
-      <p className="mt-1 text-sm text-neutral-500">
+    <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6">
+      <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl">My Profile</h1>
+      <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
         Complete your profile so employers can trust who you are — a field of expertise and at
         least one education entry are required before you can apply to jobs.
       </p>
 
-      <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-4">
-        <p className="text-sm font-semibold text-neutral-900">
-          {completedCount} of {checklist.length} sections complete
-        </p>
-        <ul className="mt-2 space-y-1.5">
+      <div className="mt-4 rounded-lg border border-neutral-200 bg-white p-3.5">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-neutral-900">Profile strength</p>
+          <span className="text-sm font-bold text-primary-700">{completionPct}%</span>
+        </div>
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
+          <div
+            className="h-full rounded-full bg-primary-600 transition-all duration-700"
+            style={{ width: `${completionPct}%` }}
+          />
+        </div>
+        <ul className="mt-3 grid gap-1 sm:grid-cols-2">
           {checklist.map((item) => (
-            <li key={item.label} className="flex items-center gap-2 text-sm">
+            <li key={item.label} className="flex items-center gap-1.5 text-xs">
               {item.done ? (
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-600" />
               ) : (
-                <Circle className="h-4 w-4 text-neutral-300" />
+                <Circle className="h-3.5 w-3.5 shrink-0 text-neutral-300" />
               )}
               <span className={item.done ? "text-neutral-700" : "text-neutral-500"}>
                 {item.label}
@@ -78,42 +86,42 @@ export default async function ProfilePage() {
           ))}
         </ul>
         {!canApply && (
-          <p className="mt-3 text-xs text-amber-700">
+          <p className="mt-2.5 text-xs text-amber-700">
             Add your field of expertise and at least one education entry to unlock applying to
             jobs.
           </p>
         )}
       </div>
 
-      <div className="mt-8 space-y-8">
-        <section className="rounded-xl border border-neutral-200 bg-white p-4 sm:p-5">
-          <h2 className="font-semibold text-neutral-900">Field of expertise</h2>
-          <div className="mt-3">
+      <div className="mt-5 space-y-5">
+        <section className="rounded-lg border border-neutral-200 bg-white p-3.5 sm:p-4">
+          <h2 className="text-sm font-semibold text-neutral-900">Field of expertise</h2>
+          <div className="mt-2.5">
             <CategorySelector initialCategories={categories} initialBio={candidateProfile?.bio ?? null} />
           </div>
         </section>
 
-        <section className="rounded-xl border border-neutral-200 bg-white p-4 sm:p-5">
-          <h2 className="font-semibold text-neutral-900">Education</h2>
-          <div className="mt-3">
+        <section className="rounded-lg border border-neutral-200 bg-white p-3.5 sm:p-4">
+          <h2 className="text-sm font-semibold text-neutral-900">Education</h2>
+          <div className="mt-2.5">
             <EducationSection education={education} />
           </div>
         </section>
 
-        <section className="rounded-xl border border-neutral-200 bg-white p-4 sm:p-5">
-          <h2 className="font-semibold text-neutral-900">Work experience</h2>
-          <div className="mt-3">
+        <section className="rounded-lg border border-neutral-200 bg-white p-3.5 sm:p-4">
+          <h2 className="text-sm font-semibold text-neutral-900">Work experience</h2>
+          <div className="mt-2.5">
             <ExperienceSection experience={experience} />
           </div>
         </section>
 
-        <section className="rounded-xl border border-neutral-200 bg-white p-4 sm:p-5">
-          <h2 className="font-semibold text-neutral-900">Certificates &amp; documents</h2>
+        <section className="rounded-lg border border-neutral-200 bg-white p-3.5 sm:p-4">
+          <h2 className="text-sm font-semibold text-neutral-900">Certificates &amp; documents</h2>
           <p className="mt-1 text-xs text-neutral-500">
             Upload proof of your skills — degree certificates, training certificates, or portfolio
             documents.
           </p>
-          <div className="mt-3">
+          <div className="mt-2.5">
             <CertificatesSection certificates={certificates} viewUrls={viewUrls} />
           </div>
         </section>

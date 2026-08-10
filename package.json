@@ -8,7 +8,9 @@
     "start": "next start",
     "start:server": "node server.js",
     "lint": "eslint",
-    "seed:users": "node --env-file=.env.local supabase/seed-users.mjs"
+    "seed:users": "node --env-file=.env.local supabase/seed-users.mjs",
+    "deploy:website": "vercel deploy --prod",
+    "deploy:app": "node scripts/deploy-app.mjs"
   },
   "engines": {
     "node": ">=20.9.0"

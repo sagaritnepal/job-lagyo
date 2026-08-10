@@ -3,15 +3,89 @@
 import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { addExperienceAction, deleteExperienceAction } from "./actions";
+import { COMMON_JOB_TITLES } from "@/lib/constants";
 import type { CandidateExperience } from "@/lib/types";
 
 const inputClass =
-  "mt-1 w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-primary-500";
+  "mt-1 w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-primary-500 disabled:bg-neutral-50 disabled:text-neutral-400";
 const labelClass = "text-sm font-medium text-neutral-700";
 
 function formatDate(d: string | null) {
   if (!d) return "Present";
   return new Date(d).toLocaleDateString("en-CA", { year: "numeric", month: "short" });
+}
+
+function AddExperienceForm({ onDone }: { onDone: () => void }) {
+  const [current, setCurrent] = useState(false);
+
+  return (
+    <form
+      action={addExperienceAction}
+      onSubmit={() => onDone()}
+      className="space-y-4 rounded-lg border border-neutral-200 p-3"
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label className={labelClass}>Job title</label>
+          <input
+            type="text"
+            name="job_title"
+            list="job-title-options"
+            required
+            className={inputClass}
+            placeholder="Start typing or pick a suggestion"
+          />
+          <datalist id="job-title-options">
+            {COMMON_JOB_TITLES.map((t) => (
+              <option key={t} value={t} />
+            ))}
+          </datalist>
+        </div>
+        <div>
+          <label className={labelClass}>Company</label>
+          <input type="text" name="company_name" required className={inputClass} />
+        </div>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label className={labelClass}>Start date</label>
+          <input type="date" name="start_date" required className={inputClass} />
+        </div>
+        <div>
+          <label className={labelClass}>End date</label>
+          <input type="date" name="end_date" disabled={current} className={inputClass} />
+          <label className="mt-1.5 flex items-center gap-1.5 text-xs text-neutral-500">
+            <input
+              type="checkbox"
+              checked={current}
+              onChange={(e) => setCurrent(e.target.checked)}
+              className="accent-primary-600"
+            />
+            I currently work here
+          </label>
+        </div>
+      </div>
+      <div>
+        <label className={labelClass}>Description (optional)</label>
+        <textarea name="description" rows={3} className={inputClass} />
+      </div>
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="rounded-lg bg-primary-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-primary-700"
+        >
+          Add
+        </button>
+        <button
+          type="button"
+          onClick={onDone}
+          className="rounded-lg border border-neutral-200 px-4 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-50"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
 }
 
 export function ExperienceSection({ experience }: { experience: CandidateExperience[] }) {
@@ -52,51 +126,7 @@ export function ExperienceSection({ experience }: { experience: CandidateExperie
       )}
 
       {adding ? (
-        <form
-          action={addExperienceAction}
-          onSubmit={() => setAdding(false)}
-          className="space-y-3 rounded-lg border border-neutral-200 p-3"
-        >
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className={labelClass}>Job title</label>
-              <input type="text" name="job_title" required className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}>Company</label>
-              <input type="text" name="company_name" required className={inputClass} />
-            </div>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className={labelClass}>Start date</label>
-              <input type="date" name="start_date" required className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}>End date (blank if current)</label>
-              <input type="date" name="end_date" className={inputClass} />
-            </div>
-          </div>
-          <div>
-            <label className={labelClass}>Description (optional)</label>
-            <textarea name="description" rows={3} className={inputClass} />
-          </div>
-          <div className="flex gap-2">
-            <button
-              type="submit"
-              className="rounded-lg bg-primary-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-primary-700"
-            >
-              Add
-            </button>
-            <button
-              type="button"
-              onClick={() => setAdding(false)}
-              className="rounded-lg border border-neutral-200 px-4 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-50"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+        <AddExperienceForm onDone={() => setAdding(false)} />
       ) : (
         <button
           type="button"

@@ -23,6 +23,49 @@ export const JOB_CATEGORIES: { name: string; icon: LucideIcon }[] = [
 
 export const JOB_CATEGORY_NAMES = JOB_CATEGORIES.map((c) => c.name);
 
+export const DEGREE_LEVELS = [
+  "SEE / SLC",
+  "+2 / Intermediate",
+  "Bachelor's",
+  "Master's",
+  "MPhil",
+  "PhD",
+  "Diploma",
+  "Vocational Training",
+] as const;
+
+export const COMMON_FIELDS_OF_STUDY = [
+  "Computer Science",
+  "Information Technology",
+  "Business Administration (BBA/MBA)",
+  "Civil Engineering",
+  "Electrical Engineering",
+  "Mechanical Engineering",
+  "Accounting & Finance",
+  "Economics",
+  "Marketing",
+  "Hospitality Management",
+  "Nursing",
+  "Education",
+  "Law",
+  "Journalism & Mass Communication",
+] as const;
+
+export const COMMON_JOB_TITLES = [
+  "Software Engineer",
+  "Sales Executive",
+  "Marketing Officer",
+  "Accountant",
+  "Customer Service Representative",
+  "Office Assistant",
+  "Graphic Designer",
+  "Teacher",
+  "Receptionist",
+  "Project Manager",
+  "HR Officer",
+  "Delivery Rider",
+] as const;
+
 export const NEPAL_LOCATIONS = [
   "Kathmandu",
   "Lalitpur",

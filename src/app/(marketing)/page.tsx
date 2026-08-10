@@ -5,9 +5,11 @@ import { SearchBar } from "@/components/SearchBar";
 import { JobListItem } from "@/components/JobListItem";
 import { CompanyBadge } from "@/components/CompanyBadge";
 import { KathmanduSkyline } from "@/components/KathmanduSkyline";
+import { CandidateDashboard } from "@/components/CandidateDashboard";
 import { getCategoryCounts, getFeaturedJobs, getHomeStats, getTopCompanies } from "@/lib/data/jobs";
 import { getSavedJobIds } from "@/lib/data/savedJobs";
 import { getAuthUser } from "@/lib/supabase/auth";
+import { createClient } from "@/lib/supabase/server";
 import { JOB_CATEGORIES } from "@/lib/constants";
 
 const HOW_IT_WORKS = [
@@ -32,12 +34,25 @@ const HOW_IT_WORKS = [
 ];
 
 export default async function HomePage() {
-  const [jobs, stats, companies, categoryCounts, user] = await Promise.all([
+  const user = await getAuthUser();
+
+  if (user) {
+    const supabase = await createClient();
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (profile?.role === "candidate") {
+      return <CandidateDashboard user={user} />;
+    }
+  }
+
+  const [jobs, stats, companies, categoryCounts] = await Promise.all([
     getFeaturedJobs(6),
     getHomeStats(),
     getTopCompanies(5),
     getCategoryCounts(),
-    getAuthUser(),
   ]);
   const savedJobIds = user ? await getSavedJobIds(user.id) : new Set<string>();
 

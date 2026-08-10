@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Geist, Geist_Mono, Noto_Sans_Devanagari } from "next/font/google";
 import { BRAND_NAVY, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { AppShellInit } from "@/components/AppShellInit";
+import { DevRoleSwitcher } from "@/components/DevRoleSwitcher";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -131,6 +132,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full">
         <AppShellInit />
         {children}
+        <DevRoleSwitcher />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

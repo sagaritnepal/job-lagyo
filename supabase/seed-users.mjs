@@ -47,21 +47,21 @@ const PROFILES = [
   {
     key: "Admin",
     email: "admin@joblagyo.dev",
-    password: "Admin@Lagyo2026",
+    password: "123456",
     full_name: "Job Lagyo Admin",
     role: "admin",
   },
   {
     key: "Job seeker",
     email: "seeker@joblagyo.dev",
-    password: "Seeker@Lagyo2026",
+    password: "123456",
     full_name: "Sita Sharma",
     role: "candidate",
   },
   {
     key: "Job provider",
     email: "employer@joblagyo.dev",
-    password: "Employer@Lagyo2026",
+    password: "123456",
     full_name: "Ramesh Adhikari",
     role: "employer",
     company: { name: "Himalayan Tech Pvt. Ltd.", location: "Kathmandu" },
@@ -96,7 +96,14 @@ async function ensureUser(profile) {
     user = data.user;
     console.log(`Created ${profile.key}: ${profile.email}`);
   } else {
-    console.log(`Already exists, reusing: ${profile.email}`);
+    // Re-running this script is also how the demo password gets reset —
+    // createUser() only runs once per email, so an existing account needs
+    // an explicit update to pick up a changed PROFILES password.
+    const { error: passwordError } = await supabase.auth.admin.updateUserById(user.id, {
+      password: profile.password,
+    });
+    if (passwordError) throw passwordError;
+    console.log(`Already exists, reset password: ${profile.email}`);
   }
 
   // The profile-creation trigger only fires on first signup, so make sure

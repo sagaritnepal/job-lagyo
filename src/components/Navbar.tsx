@@ -9,9 +9,9 @@ import { Logo } from "@/components/Logo";
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center">
-          <Logo className="text-3xl sm:text-[2rem]" />
+          <Logo className="text-2xl sm:text-[1.75rem]" />
         </Link>
 
         <div className="web-chrome contents">

@@ -75,6 +75,29 @@ html {
   border-radius: 4px;
 }
 
+/* Every button/link/control gets an immediate, tactile press response —
+   without this, taps on touch devices show nothing until the async action
+   (navigation, server action) resolves, which reads as "laggy" even when
+   the underlying request is fast. Individual components can still opt out
+   or override with their own transition/active classes. */
+button,
+a,
+select,
+[role="button"] {
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    opacity 120ms ease,
+    transform 100ms ease;
+}
+
+button:not(:disabled):active,
+a:active,
+[role="button"]:not(:disabled):active {
+  transform: scale(0.97);
+}
+
 /* Thin, unobtrusive scrollbar for the app-shell feel on desktop; mobile
    browsers already hide these by default. */
 ::-webkit-scrollbar {

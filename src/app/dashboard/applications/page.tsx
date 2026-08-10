@@ -45,16 +45,16 @@ export default async function ApplicationsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-neutral-900">
+      <h1 className="text-lg font-bold text-neutral-900 sm:text-xl">
         Applicants {applications.length > 0 && `(${applications.length})`}
       </h1>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-3 flex flex-wrap gap-1.5">
         {TABS.map((tab) => (
           <Link
             key={tab.value}
             href={`/dashboard/applications${tab.value ? `?status=${tab.value}` : ""}`}
-            className={`rounded-full px-3.5 py-1.5 text-sm font-medium ${
+            className={`rounded-full px-3 py-1 text-xs font-medium ${
               status === tab.value
                 ? "bg-primary-600 text-white"
                 : "border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50"
@@ -66,17 +66,17 @@ export default async function ApplicationsPage({
       </div>
 
       {applications.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-dashed border-neutral-300 bg-white p-10 text-center text-sm text-neutral-500">
+        <p className="mt-6 rounded-lg border border-dashed border-neutral-300 bg-white p-8 text-center text-sm text-neutral-500">
           No applications here yet.
         </p>
       ) : (
-        <div className="mt-6 space-y-3">
+        <div className="mt-4 space-y-2.5">
           {applications.map((app) => {
             const meta = statusMeta(app.status);
             return (
               <div
                 key={app.id}
-                className="rounded-xl border border-neutral-200 bg-white p-4 sm:p-5"
+                className="rounded-lg border border-neutral-200 bg-white p-3.5"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
@@ -108,7 +108,7 @@ export default async function ApplicationsPage({
                   </a>
                 )}
 
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 pt-3">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 pt-2.5">
                   <span className="flex items-center gap-1.5 text-xs text-neutral-400">
                     <Calendar className="h-3.5 w-3.5" />
                     {new Date(app.created_at).toLocaleDateString("en-CA")}

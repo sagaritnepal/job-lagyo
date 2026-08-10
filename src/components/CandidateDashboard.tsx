@@ -55,36 +55,36 @@ export async function CandidateDashboard({ user }: { user: User }) {
   const recentApplications = applications.slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
+    <div className="mx-auto max-w-5xl px-4 py-4 sm:px-6 sm:py-5">
       <div className="animate-fade-in-up">
-        <h1 className="text-2xl font-bold text-neutral-900">Welcome back, {firstName}</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+        <h1 className="text-lg font-bold text-neutral-900 sm:text-xl">Welcome back, {firstName}</h1>
+        <p className="mt-0.5 text-xs text-neutral-500">
           Here&apos;s what&apos;s happening with your job search today.
         </p>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+      <div className="mt-3.5 grid gap-3 sm:grid-cols-3">
         <StatCard label="Applications Sent" value={applications.length} deltaPct={null} icon={FileText} />
         <StatCard label="Saved Jobs" value={savedJobs.length} deltaPct={null} icon={Bookmark} />
         <StatCard label="In Progress" value={shortlistedCount} deltaPct={null} icon={Sparkles} />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
-        <div className="space-y-6">
-          <div className="rounded-xl border border-neutral-200 bg-white p-5">
+      <div className="mt-3.5 grid gap-3.5 lg:grid-cols-[1fr_300px]">
+        <div className="space-y-3.5">
+          <div className="rounded-lg border border-neutral-200 bg-white p-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-neutral-900">Recommended For You</h2>
-              <Link href="/jobs" className="text-sm font-semibold text-primary-700 hover:underline">
+              <h2 className="text-sm font-semibold text-neutral-900">Recommended For You</h2>
+              <Link href="/jobs" className="text-xs font-semibold text-primary-700 hover:underline">
                 View All Jobs →
               </Link>
             </div>
             {recommendedJobs.length === 0 ? (
-              <p className="mt-6 flex flex-col items-center gap-2 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-8 text-center text-sm text-neutral-500">
+              <p className="mt-4 flex flex-col items-center gap-2 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-xs text-neutral-500">
                 <Search className="h-5 w-5 text-neutral-400" />
                 No jobs to show yet — check back soon.
               </p>
             ) : (
-              <div className="mt-4 space-y-3">
+              <div className="mt-2.5 space-y-2">
                 {recommendedJobs.map((job) => (
                   <JobListItem key={job.id} job={job} isSaved={savedJobIds.has(job.id)} isLoggedIn />
                 ))}
@@ -92,26 +92,26 @@ export async function CandidateDashboard({ user }: { user: User }) {
             )}
           </div>
 
-          <div className="rounded-xl border border-neutral-200 bg-white p-5">
+          <div className="rounded-lg border border-neutral-200 bg-white p-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-neutral-900">Recent Applications</h2>
+              <h2 className="text-sm font-semibold text-neutral-900">Recent Applications</h2>
               <Link
                 href="/my-applications"
-                className="text-sm font-semibold text-primary-700 hover:underline"
+                className="text-xs font-semibold text-primary-700 hover:underline"
               >
                 View All →
               </Link>
             </div>
             {recentApplications.length === 0 ? (
-              <p className="mt-6 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-8 text-center text-sm text-neutral-500">
+              <p className="mt-4 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-xs text-neutral-500">
                 You haven&apos;t applied to any jobs yet.
               </p>
             ) : (
-              <ul className="mt-4 divide-y divide-neutral-100">
+              <ul className="mt-2.5 divide-y divide-neutral-100">
                 {recentApplications.map((app) => {
                   const meta = statusMeta(app.status);
                   return (
-                    <li key={app.id} className="flex items-center justify-between gap-3 py-3">
+                    <li key={app.id} className="flex items-center justify-between gap-3 py-2">
                       <div className="min-w-0">
                         <Link
                           href={`/jobs/${app.job?.slug}`}
@@ -136,25 +136,25 @@ export async function CandidateDashboard({ user }: { user: User }) {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="rounded-xl border border-neutral-200 bg-white p-5">
+        <div className="space-y-3.5">
+          <div className="rounded-lg border border-neutral-200 bg-white p-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-neutral-900">Profile Strength</h2>
+              <h2 className="text-sm font-semibold text-neutral-900">Profile Strength</h2>
               <span className="text-sm font-bold text-primary-700">{completionPct}%</span>
             </div>
-            <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-neutral-100">
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
               <div
                 className="h-full rounded-full bg-primary-600 transition-all duration-700"
                 style={{ width: `${completionPct}%` }}
               />
             </div>
-            <ul className="mt-4 space-y-1.5">
+            <ul className="mt-3 space-y-1">
               {checklist.map((item) => (
-                <li key={item.label} className="flex items-center gap-2 text-sm">
+                <li key={item.label} className="flex items-center gap-2 text-xs">
                   {item.done ? (
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-600" />
                   ) : (
-                    <Circle className="h-4 w-4 shrink-0 text-neutral-300" />
+                    <Circle className="h-3.5 w-3.5 shrink-0 text-neutral-300" />
                   )}
                   <span className={item.done ? "text-neutral-700" : "text-neutral-500"}>
                     {item.label}
@@ -164,25 +164,25 @@ export async function CandidateDashboard({ user }: { user: User }) {
             </ul>
             <Link
               href="/profile"
-              className="mt-4 flex items-center justify-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
+              className="mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700"
             >
               {completedCount === checklist.length ? "Edit Profile" : "Complete Your Profile"}
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
-          <div className="rounded-xl border border-neutral-200 bg-white p-5">
-            <h2 className="font-semibold text-neutral-900">Quick Actions</h2>
-            <div className="mt-3 space-y-2">
+          <div className="rounded-lg border border-neutral-200 bg-white p-3.5">
+            <h2 className="text-sm font-semibold text-neutral-900">Quick Actions</h2>
+            <div className="mt-2 space-y-1.5">
               <Link
                 href="/jobs"
-                className="flex items-center gap-2 rounded-lg bg-primary-50 px-4 py-3 text-sm font-semibold text-primary-700 hover:bg-primary-100"
+                className="flex items-center gap-2 rounded-lg bg-primary-50 px-3.5 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-100"
               >
                 <Briefcase className="h-4 w-4" /> Browse All Jobs
               </Link>
               <Link
                 href="/saved-jobs"
-                className="flex items-center gap-2 rounded-lg border border-neutral-200 px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+                className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3.5 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
               >
                 <Bookmark className="h-4 w-4" /> Saved Jobs
               </Link>

@@ -4,8 +4,8 @@ import { Logo } from "@/components/Logo";
 export function Footer() {
   return (
     <footer className="web-chrome mt-auto border-t border-neutral-200 bg-neutral-50 pb-16 md:pb-0">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        <div className="flex flex-col items-start justify-between gap-5 sm:flex-row">
           <div>
             <Logo className="text-2xl" />
             <p className="mt-2 max-w-xs text-sm text-neutral-500">
@@ -52,7 +52,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-neutral-400">
+        <p className="mt-5 text-xs text-neutral-400">
           © {new Date().getFullYear()} Job Lagyo. Made in Kathmandu, Nepal.
         </p>
       </div>

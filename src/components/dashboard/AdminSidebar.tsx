@@ -28,9 +28,9 @@ export function AdminSidebar({ name, email }: { name: string; email: string }) {
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between gap-2.5 px-5 py-6">
+        <div className="flex items-center justify-between gap-2.5 px-4 py-4">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-600 text-sm font-bold text-white">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 text-sm font-bold text-white">
               JL
             </span>
             <div>
@@ -50,7 +50,7 @@ export function AdminSidebar({ name, email }: { name: string; email: string }) {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3">
+        <nav className="flex-1 space-y-0.5 px-2.5">
           {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
             const active = href === "/admin" ? pathname === href : pathname.startsWith(href);
             return (
@@ -58,21 +58,21 @@ export function AdminSidebar({ name, email }: { name: string; email: string }) {
                 key={href}
                 href={href}
                 onClick={() => setOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+                className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition ${
                   active
                     ? "bg-primary-600 text-white"
                     : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
                 }`}
               >
-                <Icon className="h-4.5 w-4.5" />
+                <Icon className="h-4 w-4" />
                 {label}
               </Link>
             );
           })}
         </nav>
 
-        <div className="flex items-center gap-3 border-t border-neutral-800 px-4 py-4">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-700 text-sm font-semibold text-white">
+        <div className="flex items-center gap-2.5 border-t border-neutral-800 px-3.5 py-3.5">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-700 text-sm font-semibold text-white">
             {name.charAt(0).toUpperCase() || "A"}
           </span>
           <div className="min-w-0">

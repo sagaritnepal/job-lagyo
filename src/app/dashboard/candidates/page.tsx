@@ -48,21 +48,21 @@ export default async function CandidatesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-neutral-900">Candidates</h1>
-      <p className="mt-1 text-sm text-neutral-500">
+      <h1 className="text-lg font-bold text-neutral-900 sm:text-xl">Candidates</h1>
+      <p className="mt-0.5 text-xs text-neutral-500">
         Everyone who has applied to your job posts.
       </p>
 
       {rows.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-dashed border-neutral-300 bg-white p-10 text-center text-sm text-neutral-500">
+        <p className="mt-6 rounded-lg border border-dashed border-neutral-300 bg-white p-8 text-center text-sm text-neutral-500">
           No candidates yet.
         </p>
       ) : (
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
           {rows.map((candidate) => (
             <div
               key={candidate.name + candidate.applications[0].id}
-              className="rounded-xl border border-neutral-200 bg-white p-4"
+              className="rounded-lg border border-neutral-200 bg-white p-3.5"
             >
               <div className="flex items-center gap-3">
                 <CompanyBadge name={candidate.name} />

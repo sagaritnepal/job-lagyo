@@ -59,7 +59,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="hero-shell relative overflow-hidden bg-neutral-900 px-4 pb-32 pt-16 sm:px-6 sm:pb-40 sm:pt-20">
+      <section className="hero-shell relative overflow-hidden bg-neutral-900 px-4 pb-24 pt-8 sm:px-6 sm:pb-28 sm:pt-10">
         <div className="web-chrome contents">
           <Image
             src="/Bouddhanath-Stupa-amazing-vieww-1536x1152.jpg"
@@ -75,21 +75,21 @@ export default async function HomePage() {
             <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white">
               #1 Job Portal in Nepal
             </span>
-            <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
               Find Your Dream Career in Nepal
             </h1>
-            <p className="mt-2 text-sm text-primary-200">रोजगारको लागि तपाईंको भरपर्दो साथी</p>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-neutral-300 sm:text-base">
+            <p className="mt-1.5 text-sm text-primary-200">रोजगारको लागि तपाईंको भरपर्दो साथी</p>
+            <p className="mx-auto mt-2.5 max-w-xl text-sm text-neutral-300 sm:text-base">
               Explore thousands of verified job opportunities from Nepal&apos;s top
               employers. Fast, friendly, and easy.
             </p>
           </div>
 
-          <div className="mx-auto mt-8 max-w-2xl">
+          <div className="mx-auto mt-5 max-w-2xl">
             <SearchBar />
           </div>
 
-          <div className="web-chrome mt-6 text-xs text-white/80 sm:mt-5">
+          <div className="web-chrome mt-4 text-xs text-white/80 sm:mt-3.5">
             <span className="block font-medium sm:inline">Popular Searches:</span>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-2 sm:mt-0 sm:inline-flex">
               {["React Developer", "Digital Marketing", "Sales Manager", "Teacher"].map((term) => (
@@ -110,7 +110,7 @@ export default async function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="web-chrome border-b border-neutral-100 bg-white px-4 py-10 sm:px-6">
+      <section className="web-chrome border-b border-neutral-100 bg-white px-4 py-6 sm:px-6">
         <div className="mx-auto grid max-w-5xl grid-cols-2 gap-6 text-center sm:grid-cols-4">
           {[
             { label: "Active Job Openings", value: stats.activeJobs },
@@ -119,26 +119,26 @@ export default async function HomePage() {
             { label: "Daily Applications", value: stats.dailyApplications },
           ].map((stat) => (
             <div key={stat.label}>
-              <p className="text-2xl font-extrabold text-primary-700 sm:text-3xl">
+              <p className="text-xl font-extrabold text-primary-700 sm:text-2xl">
                 {stat.value.toLocaleString()}+
               </p>
-              <p className="mt-1 text-xs text-neutral-500 sm:text-sm">{stat.label}</p>
+              <p className="mt-0.5 text-xs text-neutral-500">{stat.label}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Categories */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-neutral-900">
+          <h2 className="text-xl font-bold text-neutral-900 sm:text-2xl">
             Explore Featured Categories
           </h2>
           <p className="mt-1 text-sm text-neutral-500">
             Discover opportunities across high-demand sectors in Nepal&apos;s job market.
           </p>
         </div>
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {JOB_CATEGORIES.map(({ name, icon: Icon }) => (
             <Link
               key={name}
@@ -161,13 +161,13 @@ export default async function HomePage() {
 
       {/* Top companies */}
       {companies.length > 0 && (
-        <section className="web-chrome border-y border-neutral-100 bg-neutral-50 px-4 py-14 sm:px-6">
+        <section className="web-chrome border-y border-neutral-100 bg-neutral-50 px-4 py-8 sm:px-6">
           <div className="mx-auto max-w-6xl text-center">
-            <h2 className="text-2xl font-bold text-neutral-900">Top Companies Hiring Now</h2>
+            <h2 className="text-xl font-bold text-neutral-900 sm:text-2xl">Top Companies Hiring Now</h2>
             <p className="mt-1 text-sm text-neutral-500">
               Learn more about Nepal&apos;s most loved workplaces.
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-8">
               {companies.map((company) => (
                 <div key={company.id} className="flex flex-col items-center gap-2">
                   <CompanyBadge name={company.name} />
@@ -180,10 +180,10 @@ export default async function HomePage() {
       )}
 
       {/* Latest jobs */}
-      <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+      <section className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-neutral-900">Latest Job Openings</h2>
+            <h2 className="text-xl font-bold text-neutral-900 sm:text-2xl">Latest Job Openings</h2>
             <p className="mt-1 text-sm text-neutral-500">
               Hand-picked verified opportunities updated just minutes ago.
             </p>
@@ -219,13 +219,13 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="web-chrome border-y border-neutral-100 bg-neutral-50 px-4 py-14 sm:px-6">
+      <section className="web-chrome border-y border-neutral-100 bg-neutral-50 px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-5xl text-center">
-          <h2 className="text-2xl font-bold text-neutral-900">How Job Lagyo Works</h2>
+          <h2 className="text-xl font-bold text-neutral-900 sm:text-2xl">How Job Lagyo Works</h2>
           <p className="mt-1 text-sm text-neutral-500">
             Your simple 3-step guide to landing your dream job in Nepal.
           </p>
-          <div className="mt-10 grid gap-8 sm:grid-cols-3">
+          <div className="mt-7 grid gap-8 sm:grid-cols-3">
             {HOW_IT_WORKS.map(({ step, title, description, icon: Icon }) => (
               <div key={step} className="relative">
                 <span className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 text-6xl font-extrabold text-neutral-200">
@@ -244,8 +244,8 @@ export default async function HomePage() {
 
       {/* CTA */}
       <section className="web-chrome bg-primary-700">
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-5 px-4 py-14 text-center sm:px-6">
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 py-8 text-center sm:px-6">
+          <h2 className="text-xl font-bold text-white sm:text-2xl">
             Ready to find your next opportunity?
           </h2>
           <p className="max-w-xl text-sm text-primary-100">
@@ -269,12 +269,12 @@ export default async function HomePage() {
       </section>
 
       {/* Success stories */}
-      <section className="web-chrome mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <h2 className="text-center text-2xl font-bold text-neutral-900">Success Stories</h2>
+      <section className="web-chrome mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <h2 className="text-center text-xl font-bold text-neutral-900 sm:text-2xl">Success Stories</h2>
         <p className="mt-1 text-center text-sm text-neutral-500">
           Hear from happy job seekers who found their path through Job Lagyo.
         </p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <div className="mt-5 grid gap-4 sm:grid-cols-3">
           {[
             {
               quote: "Job Lagyo made my job hunt so simple! I applied to 3 places and got an interview callback within a week.",

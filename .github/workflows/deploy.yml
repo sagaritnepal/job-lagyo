@@ -1,0 +1,27 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: team_qBTZQjzDF5Wad1YoEcAD95df
+      VERCEL_PROJECT_ID: prj_OpmA7xtK4XourMvuqy5L9DJwyjdL
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Deploy website (job-lagyo.vercel.app)
+        run: npm run deploy:website
+
+      - name: Deploy app (job-lagyo-app.vercel.app)
+        run: npm run deploy:app

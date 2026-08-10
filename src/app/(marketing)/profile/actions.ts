@@ -6,9 +6,6 @@ import { JOB_CATEGORY_NAMES } from "@/lib/constants";
 
 export type ProfileActionState = { error?: string };
 
-const initialState: ProfileActionState = {};
-export { initialState as profileInitialState };
-
 async function requireCandidate() {
   const supabase = await createClient();
   const {

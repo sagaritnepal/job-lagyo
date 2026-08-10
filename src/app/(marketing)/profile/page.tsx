@@ -62,6 +62,23 @@ export default async function ProfilePage() {
       </p>
 
       <div className="mt-4 rounded-lg border border-neutral-200 bg-white p-3.5">
+        <h2 className="text-sm font-semibold text-neutral-900">Account</h2>
+        <dl className="mt-2.5 space-y-1.5 text-xs">
+          <div className="flex justify-between gap-3">
+            <dt className="text-neutral-500">Name</dt>
+            <dd className="text-neutral-900">{profile?.full_name ?? "—"}</dd>
+          </div>
+          <div className="flex justify-between gap-3">
+            <dt className="text-neutral-500">Email</dt>
+            <dd className="text-neutral-900">{user.email}</dd>
+          </div>
+        </dl>
+        <div className="mt-3 border-t border-neutral-100 pt-3">
+          <LogoutButton />
+        </div>
+      </div>
+
+      <div className="mt-3.5 rounded-lg border border-neutral-200 bg-white p-3.5">
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-neutral-900">Profile strength</p>
           <span className="text-sm font-bold text-primary-700">{completionPct}%</span>
@@ -92,23 +109,6 @@ export default async function ProfilePage() {
             jobs.
           </p>
         )}
-      </div>
-
-      <div className="mt-3.5 rounded-lg border border-neutral-200 bg-white p-3.5">
-        <h2 className="text-sm font-semibold text-neutral-900">Account</h2>
-        <dl className="mt-2.5 space-y-1.5 text-xs">
-          <div className="flex justify-between gap-3">
-            <dt className="text-neutral-500">Name</dt>
-            <dd className="text-neutral-900">{profile?.full_name ?? "—"}</dd>
-          </div>
-          <div className="flex justify-between gap-3">
-            <dt className="text-neutral-500">Email</dt>
-            <dd className="text-neutral-900">{user.email}</dd>
-          </div>
-        </dl>
-        <div className="mt-3 border-t border-neutral-100 pt-3">
-          <LogoutButton />
-        </div>
       </div>
 
       <div className="mt-5 space-y-5">

@@ -65,6 +65,10 @@ body {
 
 html {
   scroll-behavior: smooth;
+  /* Stops Chrome/Edge's built-in "swipe from the screen edge" back/forward
+     overscroll navigation from racing with our own edge-swipe gestures
+     (candidate tab swipe, dashboard sidebar swipe). */
+  overscroll-behavior-x: none;
 }
 
 /* A crisp, on-brand focus ring instead of the browser default, kept for

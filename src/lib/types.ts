@@ -92,14 +92,13 @@ export interface CandidateExperience {
   created_at: string;
 }
 
-export interface CandidateCertificate {
-  id: string;
+export type CandidateDocumentType = "education" | "work" | "national_id";
+
+export interface CandidateDocument {
   candidate_id: string;
-  title: string;
-  issuer: string | null;
-  issue_date: string | null;
+  doc_type: CandidateDocumentType;
   document_path: string;
-  created_at: string;
+  uploaded_at: string;
 }
 
 export interface Job {

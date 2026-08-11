@@ -20,14 +20,14 @@ export async function CandidateDashboard({ user }: { user: User }) {
     getSavedJobs(user.id),
   ]);
 
-  const { profile, education, experience, certificates } = bundle;
+  const { profile, education, experience, documents } = bundle;
   const categories = profile?.categories ?? [];
 
   const checklist = [
     { label: "Field of expertise", done: categories.length > 0 },
     { label: "Education", done: education.length > 0 },
     { label: "Work experience", done: experience.length > 0 },
-    { label: "Certificate / document proof", done: certificates.length > 0 },
+    { label: "Required documents", done: documents.length === 3 },
   ];
   const completedCount = checklist.filter((c) => c.done).length;
   const completionPct = Math.round((completedCount / checklist.length) * 100);

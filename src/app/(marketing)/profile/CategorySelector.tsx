@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { Pencil } from "lucide-react";
 import { updateCategoriesAction, type ProfileActionState } from "./actions";
 import { JOB_CATEGORY_NAMES } from "@/lib/constants";
 
@@ -15,10 +16,46 @@ export function CategorySelector({
 }) {
   const [state, formAction, pending] = useActionState(updateCategoriesAction, initialState);
   const [selected, setSelected] = useState<string[]>(initialCategories);
+  const [editing, setEditing] = useState(initialCategories.length === 0);
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    if (wasPending.current && !pending && !state.error) {
+      setEditing(false);
+    }
+    wasPending.current = pending;
+  }, [pending, state.error]);
 
   function toggle(name: string) {
     setSelected((prev) =>
       prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name],
+    );
+  }
+
+  if (!editing) {
+    return (
+      <div className="space-y-3">
+        <div>
+          <p className="text-sm font-medium text-neutral-700">Field(s) of expertise</p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {selected.map((name) => (
+              <span
+                key={name}
+                className="rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-800"
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="flex items-center gap-1.5 text-sm font-semibold text-primary-700 hover:underline"
+        >
+          <Pencil className="h-3.5 w-3.5" /> Edit
+        </button>
+      </div>
     );
   }
 
@@ -69,13 +106,27 @@ export function CategorySelector({
 
       {state.error && <p className="text-sm text-red-600">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded-lg bg-primary-600 px-5 py-2 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
-      >
-        {pending ? "Saving..." : "Save field of expertise"}
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          disabled={pending}
+          className="rounded-lg bg-primary-600 px-5 py-2 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
+        >
+          {pending ? "Saving..." : "Save field of expertise"}
+        </button>
+        {initialCategories.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              setSelected(initialCategories);
+              setEditing(false);
+            }}
+            className="rounded-lg border border-neutral-200 px-5 py-2 text-sm font-medium text-neutral-600 hover:bg-neutral-50"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }

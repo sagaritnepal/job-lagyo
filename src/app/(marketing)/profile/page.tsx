@@ -5,11 +5,12 @@ import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/lib/supabase/auth";
 import { getCandidateProfileBundle } from "@/lib/data/candidateProfile";
 import { getCandidateDocumentSignedUrl } from "@/lib/supabase/storage";
+import type { CandidateDocumentType } from "@/lib/types";
 import { LogoutButton } from "@/components/LogoutButton";
 import { CategorySelector } from "./CategorySelector";
 import { EducationSection } from "./EducationSection";
 import { ExperienceSection } from "./ExperienceSection";
-import { CertificatesSection } from "./CertificatesSection";
+import { DocumentsSection } from "./DocumentsSection";
 
 export const metadata: Metadata = {
   title: "My Profile",
@@ -30,16 +31,18 @@ export default async function ProfilePage() {
   if (profile?.role === "employer") redirect("/dashboard/company");
   if (profile?.role === "admin") redirect("/admin");
 
-  const { profile: candidateProfile, education, experience, certificates } =
+  const { profile: candidateProfile, education, experience, documents } =
     await getCandidateProfileBundle(user.id);
 
   const viewUrlEntries = await Promise.all(
-    certificates.map(
-      async (c) => [c.id, await getCandidateDocumentSignedUrl(c.document_path)] as const,
+    documents.map(
+      async (d) => [d.doc_type, await getCandidateDocumentSignedUrl(d.document_path)] as const,
     ),
   );
   const viewUrls = new Map(
-    viewUrlEntries.filter((entry): entry is [string, string] => entry[1] !== null),
+    viewUrlEntries.filter(
+      (entry): entry is [CandidateDocumentType, string] => entry[1] !== null,
+    ),
   );
 
   const categories = candidateProfile?.categories ?? [];
@@ -47,7 +50,7 @@ export default async function ProfilePage() {
     { label: "Field of expertise", done: categories.length > 0 },
     { label: "Education", done: education.length > 0 },
     { label: "Work experience", done: experience.length > 0 },
-    { label: "Certificate / document proof", done: certificates.length > 0 },
+    { label: "Required documents", done: documents.length === 3 },
   ];
   const completedCount = checklist.filter((c) => c.done).length;
   const completionPct = Math.round((completedCount / checklist.length) * 100);
@@ -134,13 +137,12 @@ export default async function ProfilePage() {
         </section>
 
         <section className="rounded-lg border border-neutral-200 bg-white p-3.5 sm:p-4">
-          <h2 className="text-sm font-semibold text-neutral-900">Certificates &amp; documents</h2>
+          <h2 className="text-sm font-semibold text-neutral-900">Documents</h2>
           <p className="mt-1 text-xs text-neutral-500">
-            Upload proof of your skills — degree certificates, training certificates, or portfolio
-            documents.
+            3 documents are required — take a photo or upload a file for each.
           </p>
           <div className="mt-2.5">
-            <CertificatesSection certificates={certificates} viewUrls={viewUrls} />
+            <DocumentsSection documents={documents} viewUrls={viewUrls} />
           </div>
         </section>
       </div>

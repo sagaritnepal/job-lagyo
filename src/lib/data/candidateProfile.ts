@@ -3,7 +3,7 @@ import type {
   CandidateProfile,
   CandidateEducation,
   CandidateExperience,
-  CandidateCertificate,
+  CandidateDocument,
 } from "@/lib/types";
 
 export async function getCandidateProfile(id: string): Promise<CandidateProfile | null> {
@@ -51,43 +51,42 @@ export async function getCandidateExperience(candidateId: string): Promise<Candi
   return (data as CandidateExperience[]) ?? [];
 }
 
-export async function getCandidateCertificates(candidateId: string): Promise<CandidateCertificate[]> {
+export async function getCandidateDocuments(candidateId: string): Promise<CandidateDocument[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("candidate_certificates")
+    .from("candidate_documents")
     .select("*")
-    .eq("candidate_id", candidateId)
-    .order("created_at", { ascending: false });
+    .eq("candidate_id", candidateId);
 
   if (error) {
-    console.error("getCandidateCertificates error:", error.message);
+    console.error("getCandidateDocuments error:", error.message);
     return [];
   }
-  return (data as CandidateCertificate[]) ?? [];
+  return (data as CandidateDocument[]) ?? [];
 }
 
 export interface CandidateProfileBundle {
   profile: CandidateProfile | null;
   education: CandidateEducation[];
   experience: CandidateExperience[];
-  certificates: CandidateCertificate[];
+  documents: CandidateDocument[];
 }
 
 export async function getCandidateProfileBundle(candidateId: string): Promise<CandidateProfileBundle> {
-  const [profile, education, experience, certificates] = await Promise.all([
+  const [profile, education, experience, documents] = await Promise.all([
     getCandidateProfile(candidateId),
     getCandidateEducation(candidateId),
     getCandidateExperience(candidateId),
-    getCandidateCertificates(candidateId),
+    getCandidateDocuments(candidateId),
   ]);
-  return { profile, education, experience, certificates };
+  return { profile, education, experience, documents };
 }
 
 // Business rule for what counts as a "complete enough to apply" profile:
 // at least one declared field of expertise and one education entry.
-// Work experience and certificates are encouraged (surfaced in the
-// completion checklist) but not required, since first-time job seekers
-// often have neither yet. Tighten here if that policy changes.
+// Work experience and the 3 mandatory documents are encouraged (surfaced
+// in the completion checklist) but not required, since first-time job
+// seekers often have neither yet. Tighten here if that policy changes.
 export async function isCandidateProfileComplete(candidateId: string): Promise<boolean> {
   const [profile, education] = await Promise.all([
     getCandidateProfile(candidateId),

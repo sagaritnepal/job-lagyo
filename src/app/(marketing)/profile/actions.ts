@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { JOB_CATEGORY_NAMES } from "@/lib/constants";
+import { JOB_CATEGORY_NAMES, CANDIDATE_DOCUMENT_SLOTS } from "@/lib/constants";
+import type { CandidateDocumentType } from "@/lib/types";
 
 export type ProfileActionState = { error?: string };
 
@@ -120,22 +121,23 @@ export async function deleteExperienceAction(formData: FormData) {
 
 const MAX_DOCUMENT_BYTES = 5 * 1024 * 1024;
 const ALLOWED_DOCUMENT_TYPES = ["application/pdf", "image/jpeg", "image/png"];
+const DOCUMENT_TYPES = CANDIDATE_DOCUMENT_SLOTS.map((s) => s.type);
 
-export async function uploadCertificateAction(
+export async function uploadDocumentAction(
   _prevState: ProfileActionState,
   formData: FormData,
 ): Promise<ProfileActionState> {
   const { supabase, user } = await requireCandidate();
   if (!user) return { error: "You must be logged in as a job seeker." };
 
-  const title = formData.get("title")?.toString().trim();
-  const issuer = formData.get("issuer")?.toString().trim() || null;
-  const issueDate = formData.get("issue_date")?.toString() || null;
-  const document = formData.get("document");
+  const docType = formData.get("doc_type")?.toString() as CandidateDocumentType | undefined;
+  if (!docType || !DOCUMENT_TYPES.includes(docType)) {
+    return { error: "Invalid document type." };
+  }
 
-  if (!title) return { error: "Certificate title is required." };
+  const document = formData.get("document");
   if (!(document instanceof File) || document.size === 0) {
-    return { error: "Please attach a supporting document." };
+    return { error: "Please attach a document." };
   }
   if (document.size > MAX_DOCUMENT_BYTES) {
     return { error: "Document must be 5MB or smaller." };
@@ -144,8 +146,15 @@ export async function uploadCertificateAction(
     return { error: "Document must be a PDF, JPG, or PNG." };
   }
 
+  const { data: existing } = await supabase
+    .from("candidate_documents")
+    .select("document_path")
+    .eq("candidate_id", user.id)
+    .eq("doc_type", docType)
+    .maybeSingle();
+
   const ext = document.name.split(".").pop() ?? "pdf";
-  const path = `${user.id}/certificate-${Date.now()}.${ext}`;
+  const path = `${user.id}/${docType}-${Date.now()}.${ext}`;
   const { error: uploadError } = await supabase.storage
     .from("candidate-documents")
     .upload(path, document, { contentType: document.type });
@@ -154,33 +163,21 @@ export async function uploadCertificateAction(
     return { error: "Something went wrong uploading your document." };
   }
 
-  const { error } = await supabase.from("candidate_certificates").insert({
-    candidate_id: user.id,
-    title,
-    issuer,
-    issue_date: issueDate,
-    document_path: path,
-  });
+  const { error } = await supabase
+    .from("candidate_documents")
+    .upsert(
+      { candidate_id: user.id, doc_type: docType, document_path: path },
+      { onConflict: "candidate_id,doc_type" },
+    );
 
   if (error) {
-    return { error: "Could not save the certificate. Please try again." };
+    return { error: "Could not save the document. Please try again." };
+  }
+
+  if (existing?.document_path) {
+    await supabase.storage.from("candidate-documents").remove([existing.document_path]);
   }
 
   revalidatePath("/profile");
   return {};
-}
-
-export async function deleteCertificateAction(formData: FormData) {
-  const { supabase, user } = await requireCandidate();
-  if (!user) return;
-
-  const id = formData.get("id")?.toString();
-  const documentPath = formData.get("document_path")?.toString();
-  if (!id) return;
-
-  await supabase.from("candidate_certificates").delete().eq("id", id).eq("candidate_id", user.id);
-  if (documentPath) {
-    await supabase.storage.from("candidate-documents").remove([documentPath]);
-  }
-  revalidatePath("/profile");
 }

@@ -66,6 +66,16 @@ export const COMMON_JOB_TITLES = [
   "Delivery Rider",
 ] as const;
 
+export const CANDIDATE_DOCUMENT_SLOTS: {
+  type: "education" | "work" | "national_id";
+  label: string;
+  hint: string;
+}[] = [
+  { type: "education", label: "Education proof", hint: "Degree certificate, transcript, or marksheet" },
+  { type: "work", label: "Work proof", hint: "Experience letter, offer letter, or pay slip" },
+  { type: "national_id", label: "National ID", hint: "Citizenship, passport, or national ID card" },
+];
+
 export const NEPAL_LOCATIONS = [
   "Kathmandu",
   "Lalitpur",

@@ -25,12 +25,7 @@ export function Logo({ className = "" }: LogoProps) {
         />
       </svg>
       <span className="text-[#23415f]">Job</span>
-      <span
-        className="font-black text-[#e37e22]"
-        style={{ fontFamily: "var(--font-devanagari)" }}
-      >
-        लाग्यो
-      </span>
+      <span className="text-[#e37e22]">Lagyo</span>
     </span>
   );
 }

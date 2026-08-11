@@ -1,14 +1,5 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  Bookmark,
-  Briefcase,
-  CheckCircle2,
-  Circle,
-  FileText,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Bookmark, Briefcase, FileText, Search, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getCandidateProfileBundle } from "@/lib/data/candidateProfile";
 import { getCandidateApplications } from "@/lib/data/applications";
@@ -74,20 +65,6 @@ export async function CandidateDashboard({ user }: { user: User }) {
             style={{ width: `${completionPct}%` }}
           />
         </div>
-        <ul className="mt-3 grid gap-1 sm:grid-cols-2">
-          {checklist.map((item) => (
-            <li key={item.label} className="flex items-center gap-2 text-xs">
-              {item.done ? (
-                <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-600" />
-              ) : (
-                <Circle className="h-3.5 w-3.5 shrink-0 text-neutral-300" />
-              )}
-              <span className={item.done ? "text-neutral-700" : "text-neutral-500"}>
-                {item.label}
-              </span>
-            </li>
-          ))}
-        </ul>
         <Link
           href="/profile"
           className="mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 sm:w-fit sm:px-6"

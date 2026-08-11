@@ -65,25 +65,21 @@ export default async function ProfilePage() {
         least one education entry are required before you can apply to jobs.
       </p>
 
-      <div className="mt-4 rounded-lg border border-neutral-200 bg-white p-3.5">
+      <div className="mt-4 rounded-lg border border-neutral-200 bg-white p-4">
         <h2 className="text-sm font-semibold text-neutral-900">Account</h2>
-        <div className="mt-2.5 flex items-start gap-3">
+        <div className="mt-3 flex items-center gap-4">
           <AvatarUpload
             avatarUrl={profile?.avatar_url ?? null}
             name={profile?.full_name ?? user.email ?? "?"}
           />
-          <dl className="flex-1 space-y-1.5 text-xs">
-            <div className="flex justify-between gap-3">
-              <dt className="text-neutral-500">Name</dt>
-              <dd className="text-neutral-900">{profile?.full_name ?? "—"}</dd>
-            </div>
-            <div className="flex justify-between gap-3">
-              <dt className="text-neutral-500">Email</dt>
-              <dd className="text-neutral-900">{user.email}</dd>
-            </div>
-          </dl>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-neutral-900">
+              {profile?.full_name ?? "—"}
+            </p>
+            <p className="truncate text-xs text-neutral-500">{user.email}</p>
+          </div>
         </div>
-        <div className="mt-3 border-t border-neutral-100 pt-3">
+        <div className="mt-4 border-t border-neutral-100 pt-3">
           <LogoutButton />
         </div>
       </div>

@@ -26,13 +26,17 @@ export function AvatarUpload({ avatarUrl, name }: { avatarUrl: string | null; na
   }
 
   return (
-    <div className="shrink-0">
-      <div className="relative h-16 w-16">
+    <div className="flex shrink-0 flex-col items-center gap-1.5">
+      <div className="relative h-20 w-20">
         {avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- user-uploaded photo, not an optimizable static asset
-          <img src={avatarUrl} alt={name} className="h-16 w-16 rounded-full object-cover" />
+          <img
+            src={avatarUrl}
+            alt={name}
+            className="h-20 w-20 rounded-full object-cover ring-4 ring-primary-50"
+          />
         ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-lg font-bold text-primary-700">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-100 text-2xl font-bold text-primary-700 ring-4 ring-primary-50">
             {initial}
           </div>
         )}
@@ -40,7 +44,7 @@ export function AvatarUpload({ avatarUrl, name }: { avatarUrl: string | null; na
           type="button"
           onClick={() => cameraInputRef.current?.click()}
           disabled={pending}
-          className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-60"
+          className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-primary-600 text-white shadow-sm hover:bg-primary-700 disabled:opacity-60"
           aria-label="Take a new profile photo"
         >
           <Camera className="h-3.5 w-3.5" />
@@ -50,7 +54,7 @@ export function AvatarUpload({ avatarUrl, name }: { avatarUrl: string | null; na
         type="button"
         onClick={() => fileInputRef.current?.click()}
         disabled={pending}
-        className="mt-1.5 block text-[11px] font-medium text-primary-700 hover:underline disabled:opacity-60"
+        className="text-[11px] font-semibold text-primary-700 hover:underline disabled:opacity-60"
       >
         Upload photo
       </button>
@@ -79,8 +83,10 @@ export function AvatarUpload({ avatarUrl, name }: { avatarUrl: string | null; na
         }}
       />
 
-      {pending && <p className="mt-1 w-24 text-[11px] text-neutral-500">Uploading...</p>}
-      {state.error && <p className="mt-1 w-24 text-[11px] text-red-600">{state.error}</p>}
+      {pending && <p className="w-20 text-center text-[11px] text-neutral-500">Uploading...</p>}
+      {state.error && (
+        <p className="w-20 text-center text-[11px] text-red-600">{state.error}</p>
+      )}
 
       {cropSrc && (
         <PhotoCropper src={cropSrc} onCancel={() => setCropSrc(null)} onConfirm={onCropConfirm} />

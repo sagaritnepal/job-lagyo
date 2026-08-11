@@ -5,6 +5,7 @@ import { getAuthUser } from "@/lib/supabase/auth";
 import { AdminSidebar } from "@/components/dashboard/AdminSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
 import { MobileNavProvider } from "@/components/dashboard/MobileNavContext";
+import { SwipeSidebar } from "@/components/dashboard/SwipeSidebar";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -38,6 +39,7 @@ export default async function AdminLayout({
           <main className="flex-1 p-3 sm:p-4">{children}</main>
         </div>
       </div>
+      <SwipeSidebar />
     </MobileNavProvider>
   );
 }

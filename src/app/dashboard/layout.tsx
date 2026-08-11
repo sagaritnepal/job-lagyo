@@ -7,6 +7,7 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardTopBar } from "@/components/dashboard/DashboardTopBar";
 import { VerificationBanner } from "@/components/dashboard/VerificationBanner";
 import { MobileNavProvider } from "@/components/dashboard/MobileNavContext";
+import { SwipeSidebar } from "@/components/dashboard/SwipeSidebar";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -43,6 +44,7 @@ export default async function DashboardLayout({
           <main className="flex-1 p-3 sm:p-4">{children}</main>
         </div>
       </div>
+      <SwipeSidebar />
     </MobileNavProvider>
   );
 }

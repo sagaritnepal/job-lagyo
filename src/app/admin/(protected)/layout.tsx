@@ -18,7 +18,7 @@ export default async function AdminLayout({
 }) {
   const user = await getAuthUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect("/admin/login");
 
   const supabase = await createClient();
 

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ShieldCheck, Flag, Briefcase, Building2, Ban, BadgeCheck } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/supabase/auth";
 import { getAdminStats } from "@/lib/data/admin";
 import { StatCard } from "@/components/dashboard/StatCard";
 
@@ -8,11 +10,18 @@ export const metadata = {
 };
 
 export default async function AdminOverviewPage() {
+  const user = await getAuthUser();
+  const supabase = await createClient();
+  const { data: profile } = user
+    ? await supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle()
+    : { data: null };
+  const firstName = (profile?.full_name ?? "Admin").split(" ")[0];
+
   const stats = await getAdminStats();
 
   return (
     <div>
-      <h1 className="text-lg font-bold text-neutral-900 sm:text-xl">Admin Overview</h1>
+      <h1 className="text-lg font-bold text-neutral-900 sm:text-xl">Welcome back, {firstName}</h1>
       <p className="mt-0.5 text-xs text-neutral-500">
         Review job approvals, fraud flags, and vendor standing across Job Lagyo.
       </p>

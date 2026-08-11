@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, ShieldCheck, Building2, X } from "lucide-react";
+import { LayoutGrid, ShieldCheck, Building2, LogOut, X } from "lucide-react";
+import { signOutAction } from "@/lib/actions/auth";
 import { useMobileNav } from "./MobileNavContext";
 
 const NAV_ITEMS = [
@@ -71,14 +72,24 @@ export function AdminSidebar({ name, email }: { name: string; email: string }) {
           })}
         </nav>
 
-        <div className="flex items-center gap-2.5 border-t border-neutral-800 px-3.5 py-3.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-700 text-sm font-semibold text-white">
-            {name.charAt(0).toUpperCase() || "A"}
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-white">{name}</p>
-            <p className="truncate text-xs text-neutral-400">{email}</p>
+        <div className="border-t border-neutral-800 px-3.5 py-3.5">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-700 text-sm font-semibold text-white">
+              {name.charAt(0).toUpperCase() || "A"}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium text-white">{name}</p>
+              <p className="truncate text-xs text-neutral-400">{email}</p>
+            </div>
           </div>
+          <form action={signOutAction} className="mt-3">
+            <button
+              type="submit"
+              className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-neutral-400 hover:bg-neutral-800 hover:text-white"
+            >
+              <LogOut className="h-4 w-4" /> Log out
+            </button>
+          </form>
         </div>
       </aside>
     </>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { startTransition, useActionState, useRef, useState } from "react";
 import { Camera, FileText, Upload } from "lucide-react";
 import { uploadDocumentAction, type ProfileActionState } from "./actions";
 import { PhotoCropper } from "./PhotoCropper";
@@ -30,7 +30,7 @@ export function DocumentSlot({
     const fd = new FormData();
     fd.set("doc_type", docType);
     fd.set("document", file);
-    formAction(fd);
+    startTransition(() => formAction(fd));
   }
 
   function onRawFileChosen(file: File) {

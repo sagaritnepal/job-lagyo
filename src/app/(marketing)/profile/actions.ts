@@ -181,3 +181,62 @@ export async function uploadDocumentAction(
   revalidatePath("/profile");
   return {};
 }
+
+const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
+const ALLOWED_AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+export async function uploadAvatarAction(
+  _prevState: ProfileActionState,
+  formData: FormData,
+): Promise<ProfileActionState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "You must be logged in." };
+
+  const avatar = formData.get("avatar");
+  if (!(avatar instanceof File) || avatar.size === 0) {
+    return { error: "Please choose a photo." };
+  }
+  if (avatar.size > MAX_AVATAR_BYTES) {
+    return { error: "Photo must be 2MB or smaller." };
+  }
+  if (!ALLOWED_AVATAR_TYPES.includes(avatar.type)) {
+    return { error: "Photo must be a JPG, PNG, or WEBP." };
+  }
+
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("avatar_url")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const ext = avatar.name.split(".").pop() ?? "jpg";
+  const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+  const { error: uploadError } = await supabase.storage
+    .from("avatars")
+    .upload(path, avatar, { contentType: avatar.type });
+
+  if (uploadError) {
+    return { error: "Something went wrong uploading your photo." };
+  }
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("avatars").getPublicUrl(path);
+
+  const { error } = await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("id", user.id);
+
+  if (error) {
+    return { error: "Could not save your photo. Please try again." };
+  }
+
+  const oldPath = existing?.avatar_url?.split("/avatars/")[1];
+  if (oldPath) {
+    await supabase.storage.from("avatars").remove([oldPath]);
+  }
+
+  revalidatePath("/profile");
+  return {};
+}

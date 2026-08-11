@@ -119,7 +119,7 @@ export function PhotoCropper({
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex flex-col bg-black/90 p-4">
+    <div data-no-swipe className="fixed inset-0 z-[100] flex flex-col bg-black/90 p-4">
       <div className="flex items-center justify-between text-white">
         <p className="text-sm font-semibold">Drag the corners to crop, then confirm</p>
         <button

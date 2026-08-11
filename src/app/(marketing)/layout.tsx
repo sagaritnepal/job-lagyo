@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { MobileTabBar } from "@/components/MobileTabBar";
+import { SwipeNavigation } from "@/components/SwipeNavigation";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,6 +10,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <main className="flex-1 pb-16 md:pb-0">{children}</main>
       <Footer />
       <MobileTabBar />
+      <SwipeNavigation />
     </div>
   );
 }

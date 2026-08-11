@@ -7,6 +7,7 @@ import { getCandidateProfileBundle } from "@/lib/data/candidateProfile";
 import { getCandidateDocumentSignedUrl } from "@/lib/supabase/storage";
 import type { CandidateDocumentType } from "@/lib/types";
 import { LogoutButton } from "@/components/LogoutButton";
+import { AvatarUpload } from "./AvatarUpload";
 import { CategorySelector } from "./CategorySelector";
 import { EducationSection } from "./EducationSection";
 import { ExperienceSection } from "./ExperienceSection";
@@ -24,7 +25,7 @@ export default async function ProfilePage() {
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role, full_name")
+    .select("role, full_name, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -66,16 +67,22 @@ export default async function ProfilePage() {
 
       <div className="mt-4 rounded-lg border border-neutral-200 bg-white p-3.5">
         <h2 className="text-sm font-semibold text-neutral-900">Account</h2>
-        <dl className="mt-2.5 space-y-1.5 text-xs">
-          <div className="flex justify-between gap-3">
-            <dt className="text-neutral-500">Name</dt>
-            <dd className="text-neutral-900">{profile?.full_name ?? "—"}</dd>
-          </div>
-          <div className="flex justify-between gap-3">
-            <dt className="text-neutral-500">Email</dt>
-            <dd className="text-neutral-900">{user.email}</dd>
-          </div>
-        </dl>
+        <div className="mt-2.5 flex items-start gap-3">
+          <AvatarUpload
+            avatarUrl={profile?.avatar_url ?? null}
+            name={profile?.full_name ?? user.email ?? "?"}
+          />
+          <dl className="flex-1 space-y-1.5 text-xs">
+            <div className="flex justify-between gap-3">
+              <dt className="text-neutral-500">Name</dt>
+              <dd className="text-neutral-900">{profile?.full_name ?? "—"}</dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-neutral-500">Email</dt>
+              <dd className="text-neutral-900">{user.email}</dd>
+            </div>
+          </dl>
+        </div>
         <div className="mt-3 border-t border-neutral-100 pt-3">
           <LogoutButton />
         </div>

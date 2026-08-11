@@ -30,3 +30,18 @@ jobs:
 
       - name: Deploy app (job-lagyo-app.vercel.app)
         run: npm run deploy:app
+
+  cleanup:
+    needs: deploy
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Delete old workflow runs, keep the latest 3
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run list --workflow deploy.yml --repo "${{ github.repository }}" \
+            --json databaseId --jq '.[3:][].databaseId' \
+          | xargs -r -n1 gh run delete --repo "${{ github.repository }}"

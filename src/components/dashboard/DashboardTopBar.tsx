@@ -1,9 +1,10 @@
 "use client";
 
-import { Bell, Menu, Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
+import { NotificationBell } from "@/components/NotificationBell";
 import { useMobileNav } from "./MobileNavContext";
 
-export function DashboardTopBar() {
+export function DashboardTopBar({ unreadCount }: { unreadCount: number }) {
   const { setOpen } = useMobileNav();
 
   return (
@@ -27,13 +28,7 @@ export function DashboardTopBar() {
         </div>
       </div>
       <div className="flex items-center gap-2.5">
-        <button
-          type="button"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 hover:bg-neutral-50"
-          aria-label="Notifications"
-        >
-          <Bell className="h-3.5 w-3.5" />
-        </button>
+        <NotificationBell initialUnreadCount={unreadCount} />
         <span className="hidden shrink-0 items-center gap-1.5 rounded-full border border-accent-200 bg-accent-50 px-2.5 py-1 text-xs font-semibold text-accent-700 sm:flex">
           <span className="h-1.5 w-1.5 rounded-full bg-accent-600" /> Nepal Portal Live
         </span>

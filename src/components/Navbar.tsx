@@ -2,8 +2,10 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/lib/supabase/auth";
+import { getUnreadNotificationCount } from "@/lib/data/notifications";
 import { LogoutButton } from "@/components/LogoutButton";
 import { NavLinks } from "@/components/NavLinks";
+import { NotificationBell } from "@/components/NotificationBell";
 import { Logo } from "@/components/Logo";
 
 export function Navbar() {
@@ -38,14 +40,15 @@ async function NavbarAuthSection() {
   const user = await getAuthUser();
 
   let role: string | null = null;
+  let unreadCount = 0;
   if (user) {
     const supabase = await createClient();
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
+    const [{ data: profile }, count] = await Promise.all([
+      supabase.from("profiles").select("role").eq("id", user.id).maybeSingle(),
+      getUnreadNotificationCount(user.id),
+    ]);
     role = profile?.role ?? null;
+    unreadCount = count;
   }
 
   return (
@@ -84,6 +87,7 @@ async function NavbarAuthSection() {
               Admin
             </Link>
           )}
+          <NotificationBell initialUnreadCount={unreadCount} />
           <LogoutButton />
           <Link
             href="/post-job"
